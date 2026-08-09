@@ -695,6 +695,8 @@
   let qiblaBearing = null;
   let currentHeading = null;
   let orientationActive = false;
+  let orientationListenerAttached = false;
+  let compassActivationTimer = null;
 
   function toRad(d){ return d * Math.PI/180; }
   function toDeg(r){ return r * 180/Math.PI; }
@@ -766,19 +768,29 @@
     }
   }
 
+  function normaliseDegrees(degrees){
+    return (degrees % 360 + 360) % 360;
+  }
+
   function handleOrientation(e){
-    let heading;
-    if(typeof e.webkitCompassHeading === 'number'){
+    let heading = null;
+
+    // Safari supplies a true magnetic heading here.  On other browsers alpha is
+    // only useful when the event explicitly reports that it is absolute; using
+    // relative alpha makes the Qibla drift after a page load or recalibration.
+    if(typeof e.webkitCompassHeading === 'number' && Number.isFinite(e.webkitCompassHeading)){
       heading = e.webkitCompassHeading;
-    } else if(e.absolute && e.alpha !== null){
+    } else if(e.absolute === true && typeof e.alpha === 'number' && Number.isFinite(e.alpha)){
       heading = 360 - e.alpha;
-    } else if(e.alpha !== null){
-      heading = 360 - e.alpha;
-    } else {
-      return;
     }
-    currentHeading = heading;
+
+    if(heading === null) return;
+    currentHeading = normaliseDegrees(heading);
     orientationActive = true;
+    if(compassActivationTimer){
+      clearTimeout(compassActivationTimer);
+      compassActivationTimer = null;
+    }
     updateLiveCompass();
   }
 
@@ -786,7 +798,9 @@
     if(qiblaBearing === null || currentHeading === null) return;
     const rose = document.getElementById('compassRose');
     rose.style.transform = 'rotate(' + (-currentHeading) + 'deg)';
-    const needleRotation = qiblaBearing - currentHeading;
+    // The needle is drawn relative to the top of the screen.  A value of zero
+    // therefore means that the user is already facing the Qibla.
+    const needleRotation = normaliseDegrees(qiblaBearing - currentHeading);
     document.getElementById('compassNeedle').style.transform = 'rotate(' + needleRotation + 'deg)';
     const norm = ((needleRotation % 360) + 360) % 360;
     const diff = Math.min(norm, 360 - norm);
@@ -796,10 +810,21 @@
   document.getElementById('btnEnableCompass').addEventListener('click', ()=>{
     const btn = document.getElementById('btnEnableCompass');
     function attach(){
-      window.addEventListener('deviceorientationabsolute', handleOrientation, true);
-      window.addEventListener('deviceorientation', handleOrientation, true);
-      btn.textContent = 'Boussole activée';
+      if(!orientationListenerAttached){
+        // One listener is enough. deviceorientationabsolute is preferred, while
+        // the fallback is filtered in handleOrientation to absolute readings.
+        const eventName = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
+        window.addEventListener(eventName, handleOrientation, true);
+        orientationListenerAttached = true;
+      }
+      btn.textContent = 'Boussole activée — calibrez si besoin';
       btn.disabled = true;
+      compassActivationTimer = setTimeout(()=>{
+        if(!orientationActive){
+          btn.textContent = 'Aucune boussole détectée';
+          btn.disabled = false;
+        }
+      }, 3000);
     }
     if(typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function'){
       DeviceOrientationEvent.requestPermission().then(state=>{
