@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>La Famille N — Coran, Prières & Qibla</title>
+<title>Nadijb — Coran, Prières & Qibla</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -320,6 +320,32 @@
   .ayah-fr{
     margin-top:10px; font-size:13.5px; color:var(--text-muted); line-height:1.6;
   }
+  .tajweed-legend{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:6px 10px;
+    margin:-8px 0 16px; color:var(--text-muted); font-size:10.5px;
+  }
+  .tajweed-legend span{ display:inline-flex; align-items:center; gap:4px; }
+  .tajweed-legend i{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .recitation-panel{
+    margin:0 0 16px; padding:12px; border-radius:14px;
+    background:rgba(28,111,99,0.22); border:1px solid var(--border);
+  }
+  .recitation-label{ display:block; margin-bottom:7px; font-size:11px; color:var(--text-muted); letter-spacing:0.06em; text-transform:uppercase; }
+  .reciter-select{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); font:inherit; font-size:13px; }
+  .recitation-audio{ width:100%; height:36px; margin-top:10px; }
+  .recitation-status{ min-height:15px; margin-top:6px; color:var(--text-muted); font-size:11px; }
+  .ayah-ar .tajweed.ham_wasl{ color:#A9C4BE; }
+  .ayah-ar .tajweed.laam_shamsiyah{ color:#F2D16B; }
+  .ayah-ar .tajweed.madda_normal{ color:#F5A15B; }
+  .ayah-ar .tajweed.madda_permissible{ color:#C58AF9; }
+  .ayah-ar .tajweed.madda_necessary{ color:#FF7B72; }
+  .ayah-ar .tajweed.ghunnah,
+  .ayah-ar .tajweed.idgham_ghunnah,
+  .ayah-ar .tajweed.idgham_shafawi{ color:#55D99A; }
+  .ayah-ar .tajweed.ikhfa,
+  .ayah-ar .tajweed.iqlab{ color:#63B8FF; }
+  .ayah-ar .tajweed.qalaqah{ color:#FF8A80; }
+  .ayah-ar .tajweed-end{ color:var(--gold-light); font-size:0.78em; margin-inline-start:3px; }
   .empty-state{ text-align:center; padding:40px 20px; color:var(--text-muted); font-size:13px;}
   .spinner{
     width:22px; height:22px; border-radius:50%; border:2px solid var(--border);
@@ -369,7 +395,7 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v13m0 0l-3.5-3.5M12 16l3.5-3.5M5 20h14" stroke="#E8C766" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div>
-          <div class="brand-name">La Famille N</div>
+          <div class="brand-name">Nadijb</div>
           <div class="brand-sub">Coran · Prières · Qibla · Mosquées</div>
         </div>
       </div>
@@ -477,6 +503,20 @@
         <div class="surah-detail-title" id="surahDetailTitle">—<span class="ar" id="surahDetailTitleAr"></span></div>
       </div>
       <div class="bismillah" id="bismillah"></div>
+      <div class="tajweed-legend" aria-label="Légende Tajwid">
+        <span><i style="background:#55D99A"></i>Ghunnah</span>
+        <span><i style="background:#63B8FF"></i>Ikhfāʼ / Iqlāb</span>
+        <span><i style="background:#F5A15B"></i>Madd</span>
+        <span><i style="background:#FF7B72"></i>Qalqalah</span>
+      </div>
+      <div class="recitation-panel" id="recitationPanel" hidden>
+        <label class="recitation-label" for="reciterSelect">Écouter la récitation (Tajwīd)</label>
+        <select class="reciter-select" id="reciterSelect" disabled>
+          <option>Chargement des imams…</option>
+        </select>
+        <audio class="recitation-audio" id="recitationAudio" controls preload="none"></audio>
+        <div class="recitation-status" id="recitationStatus">Choisissez un imam.</div>
+      </div>
       <div id="ayahList"></div>
     </div>
   </section>
@@ -697,6 +737,7 @@
   let orientationActive = false;
   let orientationListenerAttached = false;
   let compassActivationTimer = null;
+  let lastCompassUpdate = 0;
 
   function toRad(d){ return d * Math.PI/180; }
   function toDeg(r){ return r * 180/Math.PI; }
@@ -772,6 +813,10 @@
     return (degrees % 360 + 360) % 360;
   }
 
+  function shortestAngleDifference(from, to){
+    return ((to - from + 540) % 360) - 180;
+  }
+
   function handleOrientation(e){
     let heading = null;
 
@@ -785,7 +830,16 @@
     }
 
     if(heading === null) return;
-    currentHeading = normaliseDegrees(heading);
+    const now = performance.now();
+    if(now - lastCompassUpdate < 50) return; // 20 visual updates/second is enough
+    lastCompassUpdate = now;
+
+    const rawHeading = normaliseDegrees(heading);
+    // Phone magnetometers are noisy. Move only a fraction towards each new
+    // reading, including correctly across the 0° / 360° boundary.
+    currentHeading = currentHeading === null
+      ? rawHeading
+      : normaliseDegrees(currentHeading + shortestAngleDifference(currentHeading, rawHeading) * 0.16);
     orientationActive = true;
     if(compassActivationTimer){
       clearTimeout(compassActivationTimer);
@@ -992,6 +1046,94 @@
     renderSurahList(filtered);
   });
 
+  /* ---------- Quran audio / reciters ---------- */
+  const recitationPanel = document.getElementById('recitationPanel');
+  const reciterSelect = document.getElementById('reciterSelect');
+  const recitationAudio = document.getElementById('recitationAudio');
+  const recitationStatus = document.getElementById('recitationStatus');
+  let activeAudioSurah = null;
+  let recitersPromise = null;
+  const FALLBACK_RECITERS = [
+    { id:'fallback:afasy', name:'Mishary Rashid Alafasy', base:'https://server8.mp3quran.net/afs/' },
+    { id:'fallback:sudais', name:'Abdur-Rahman As-Sudais', base:'https://server11.mp3quran.net/sds/' },
+    { id:'fallback:shuraim', name:'Saud Ash-Shuraim', base:'https://server7.mp3quran.net/shur/' }
+  ];
+
+  function setRecitationStatus(message){ recitationStatus.textContent = message; }
+
+  function loadReciters(){
+    if(recitersPromise) return recitersPromise;
+    // Make audio usable immediately; the complete directory can replace this
+    // short list when it finishes loading.
+    populateReciters(FALLBACK_RECITERS);
+    recitersPromise = fetch('https://api.quran.com/api/v4/resources/chapter_reciters?language=fr')
+      .then(r=>{
+        if(!r.ok) throw new Error('reciters unavailable');
+        return r.json();
+      })
+      .then(data=>{
+        const reciters = (data.reciters || []).filter(r=>r && r.id && r.name);
+        if(!reciters.length) throw new Error('no reciters');
+        const favourites = /husary|husari|alafasy|afasy|sudais|sudays|abdulbaset|abdul basit/i;
+        reciters.sort((a,b)=>(favourites.test(b.name) - favourites.test(a.name)) || a.name.localeCompare(b.name));
+        populateReciters(reciters);
+        if(activeAudioSurah) loadChapterRecitation();
+      })
+      .catch(()=>{
+        populateReciters(FALLBACK_RECITERS);
+        setRecitationStatus('Liste simplifiée chargée.');
+      });
+    return recitersPromise;
+  }
+
+  function populateReciters(reciters){
+    reciterSelect.innerHTML = '';
+    reciters.forEach(reciter=>{
+      const option = document.createElement('option');
+      option.value = reciter.id;
+      option.textContent = reciter.name + (reciter.style && reciter.style.name ? ' — ' + reciter.style.name : '');
+      reciterSelect.appendChild(option);
+    });
+    reciterSelect.disabled = false;
+  }
+
+  function loadChapterRecitation(){
+    if(!activeAudioSurah || reciterSelect.disabled) return;
+    const reciterId = reciterSelect.value;
+    recitationAudio.pause();
+    recitationAudio.removeAttribute('src');
+    recitationAudio.load();
+    setRecitationStatus('Préparation de la récitation…');
+    if(reciterId.startsWith('fallback:')){
+      const fallback = FALLBACK_RECITERS.find(reciter=>reciter.id === reciterId);
+      if(!fallback) return;
+      recitationAudio.src = fallback.base + String(activeAudioSurah.number).padStart(3, '0') + '.mp3';
+      recitationAudio.load();
+      setRecitationStatus('Prêt à écouter — la récitation suit les règles de Tajwīd.');
+      return;
+    }
+    fetch('https://api.quran.com/api/v4/chapter_recitations/' + reciterId + '/' + activeAudioSurah.number)
+      .then(r=>{
+        if(!r.ok) throw new Error('audio unavailable');
+        return r.json();
+      })
+      .then(data=>{
+        const url = data && data.audio_file && data.audio_file.audio_url;
+        if(!url) throw new Error('missing audio URL');
+        recitationAudio.src = url;
+        recitationAudio.load();
+        setRecitationStatus('Prêt à écouter — la récitation suit les règles de Tajwīd.');
+      })
+      .catch(()=> setRecitationStatus('Audio indisponible pour cet imam et cette sourate.'));
+  }
+
+  reciterSelect.addEventListener('change', loadChapterRecitation);
+  recitationAudio.addEventListener('play', ()=> setRecitationStatus('Récitation en cours…'));
+  recitationAudio.addEventListener('ended', ()=> setRecitationStatus('Récitation terminée.'));
+  recitationAudio.addEventListener('error', ()=>{
+    if(recitationAudio.getAttribute('src')) setRecitationStatus('La lecture audio a échoué. Réessayez avec un autre imam.');
+  });
+
   function openSurah(s){
     document.getElementById('quranListWrap').style.display = 'none';
     document.getElementById('quranDetailWrap').style.display = 'block';
@@ -999,20 +1141,39 @@
     document.getElementById('bismillah').textContent = s.number === 1 || s.number === 9 ? '' : 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ';
     const ayahList = document.getElementById('ayahList');
     ayahList.innerHTML = '<div class="spinner"></div>';
+    activeAudioSurah = s;
+    recitationPanel.hidden = false;
+    recitationAudio.pause();
+    recitationAudio.removeAttribute('src');
+    recitationAudio.load();
+    setRecitationStatus('Chargement des imams…');
+    loadReciters();
+    loadChapterRecitation();
 
-    fetch('https://api.alquran.cloud/v1/surah/' + s.number + '/editions/quran-uthmani,fr.hamidullah')
-      .then(r=>r.json())
-      .then(data=>{
+    const editionsUrl = 'https://api.alquran.cloud/v1/surah/' + s.number + '/editions/quran-uthmani,fr.hamidullah';
+    const tajweedUrl = 'https://api.quran.com/api/v4/quran/verses/uthmani_tajweed?chapter_number=' + s.number;
+
+    // The Tajwid endpoint contains only safe Quran markup (<tajweed> and the
+    // verse-number span). A failed Tajwid request must not prevent reading the
+    // Arabic text and French translation already provided by the main source.
+    Promise.all([
+      fetch(editionsUrl).then(r=>r.json()),
+      fetch(tajweedUrl).then(r=>r.ok ? r.json() : null).catch(()=>null)
+    ])
+      .then(([data, tajweedData])=>{
         if(!data || !data.data || data.data.length < 2){ throw new Error('bad'); }
         const arabicEdition = data.data[0].ayahs;
         const frEdition = data.data[1].ayahs;
+        const tajweedByVerse = new Map(((tajweedData && tajweedData.verses) || [])
+          .map(v=>[v.verse_key, v.text_uthmani_tajweed]));
         ayahList.innerHTML = '';
         arabicEdition.forEach((a, i)=>{
           const div = document.createElement('div');
           div.className = 'ayah';
+          const tajweedText = tajweedByVerse.get(s.number + ':' + a.numberInSurah);
           div.innerHTML =
             '<div class="ayah-num">' + a.numberInSurah + '</div>' +
-            '<div class="ayah-ar">' + a.text + '</div>' +
+            '<div class="ayah-ar">' + (tajweedText ? formatTajweed(tajweedText) : a.text) + '</div>' +
             '<div class="ayah-fr">' + (frEdition[i] ? frEdition[i].text : '') + '</div>';
           ayahList.appendChild(div);
         });
@@ -1020,6 +1181,17 @@
       .catch(()=>{
         ayahList.innerHTML = '<div class="empty-state">Impossible de charger cette sourate pour le moment. Vérifiez votre connexion et réessayez.</div>';
       });
+  }
+
+  function formatTajweed(markup){
+    // Escape every API character first, then restore only the documented
+    // Tajwid tags. This keeps the Quran markup safe to insert with innerHTML.
+    return markup
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/&lt;tajweed class=([a-z_]+)&gt;/g, '<span class="tajweed $1">')
+      .replace(/&lt;\/tajweed&gt;/g, '</span>')
+      .replace(/&lt;span class=end&gt;/g, '<span class="tajweed-end">')
+      .replace(/&lt;\/span&gt;/g, '</span>');
   }
 
   document.getElementById('btnBackToList').addEventListener('click', ()=>{
