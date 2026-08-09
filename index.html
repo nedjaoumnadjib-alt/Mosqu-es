@@ -102,6 +102,9 @@
     color:var(--text-muted);
     line-height:1.5;
   }
+  .header-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:7px; }
+  .header-language-switch{ margin:0; }
+  .header-language-switch .quran-language-btn{ min-width:38px; padding:6px 8px; font-size:11px; }
   .date-pill .hijri{
     color:var(--gold-light);
     font-family:var(--font-arabic-ui);
@@ -320,6 +323,30 @@
   .ayah-fr{
     margin-top:10px; font-size:13.5px; color:var(--text-muted); line-height:1.6;
   }
+  .ayah-en{
+    margin-top:8px; padding-top:8px; border-top:1px solid rgba(232,199,102,0.10);
+    font-size:13.5px; color:#C8DAD5; line-height:1.6;
+  }
+  .translation-label{
+    display:block; margin-bottom:3px; font-size:10px; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--gold-light);
+  }
+  .quran-language-switch{ display:flex; justify-content:flex-end; gap:6px; margin:-2px 0 14px; }
+  .quran-language-btn{
+    min-width:48px; padding:7px 10px; border-radius:8px; border:none;
+    background:#123933; color:#B8D8D1; font:inherit; font-size:13px; font-weight:700;
+  }
+  .quran-language-btn.active{ color:#06231E; background:#2DD4BF; }
+  #quranDetailWrap[data-quran-language="ar"] .ayah-fr,
+  #quranDetailWrap[data-quran-language="ar"] .ayah-en{ display:none; }
+  #quranDetailWrap[data-quran-language="fr"] .ayah-ar,
+  #quranDetailWrap[data-quran-language="fr"] .ayah-en,
+  #quranDetailWrap[data-quran-language="fr"] .bismillah,
+  #quranDetailWrap[data-quran-language="fr"] .tajweed-legend{ display:none; }
+  #quranDetailWrap[data-quran-language="en"] .ayah-ar,
+  #quranDetailWrap[data-quran-language="en"] .ayah-fr,
+  #quranDetailWrap[data-quran-language="en"] .bismillah,
+  #quranDetailWrap[data-quran-language="en"] .tajweed-legend{ display:none; }
   .tajweed-legend{
     display:flex; flex-wrap:wrap; justify-content:center; gap:6px 10px;
     margin:-8px 0 16px; color:var(--text-muted); font-size:10.5px;
@@ -396,12 +423,19 @@
         </div>
         <div>
           <div class="brand-name">Nadijb</div>
-          <div class="brand-sub">Coran · Prières · Qibla · Mosquées</div>
+          <div class="brand-sub" data-i18n="brandSub">Coran · Prières · Qibla · Mosquées</div>
         </div>
       </div>
-      <div class="date-pill">
-        <div id="gregorianDate">—</div>
-        <div class="hijri" id="hijriDate">—</div>
+      <div class="header-actions">
+        <div class="quran-language-switch header-language-switch" role="group" aria-label="Langue du texte">
+          <button class="quran-language-btn" type="button" data-quran-language="en">EN</button>
+          <button class="quran-language-btn active" type="button" data-quran-language="fr">FR</button>
+          <button class="quran-language-btn" type="button" data-quran-language="ar">AR</button>
+        </div>
+        <div class="date-pill">
+          <div id="gregorianDate">—</div>
+          <div class="hijri" id="hijriDate">—</div>
+        </div>
       </div>
     </div>
     <div class="greeting" id="greeting">Bonjour</div>
@@ -410,7 +444,7 @@
   <!-- ============ PRIERES ============ -->
   <section class="view active" id="view-prayer">
     <div class="next-prayer-card">
-      <div class="np-label">Prochaine prière</div>
+      <div class="np-label" data-i18n="nextPrayer">Prochaine prière</div>
       <div class="np-row">
         <div class="np-name" id="npName">—<span class="ar" id="npNameAr"></span></div>
         <div class="np-time" id="npTime">--:--</div>
@@ -421,10 +455,10 @@
     <div class="loc-box">
       <button class="loc-btn" id="btnGeoloc">
         <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
-        Ma position
+        <span data-i18n="myPosition">Ma position</span>
       </button>
-      <input class="loc-input" id="cityInput" type="text" placeholder="Ou entrez une ville, un pays">
-      <button class="loc-btn" id="btnCity">Valider</button>
+      <input class="loc-input" id="cityInput" type="text" placeholder="Ou entrez une ville, un pays" data-i18n-placeholder="cityPlaceholder">
+      <button class="loc-btn" id="btnCity" data-i18n="validate">Valider</button>
     </div>
     <div class="loc-status" id="locStatus"></div>
     <div class="position-chip" id="positionChip" style="display:none;">
@@ -434,7 +468,7 @@
 
     <div class="section-title">
       <svg class="divider-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/></svg>
-      Horaires du jour
+      <span data-i18n="prayerTimes">Horaires du jour</span>
     </div>
     <div class="prayer-list" id="prayerList">
       <div class="empty-state">Autorisez la localisation pour afficher les horaires de prière.</div>
@@ -445,7 +479,7 @@
   <section class="view" id="view-qibla">
     <div class="section-title">
       <svg class="divider-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/></svg>
-      Direction de la Qibla
+      <span data-i18n="qiblaTitle">Direction de la Qibla</span>
     </div>
     <div class="qibla-wrap">
       <div class="qibla-holder" id="qiblaHolder">
@@ -473,8 +507,8 @@
       </div>
 
       <div class="compass-actions">
-        <button class="primary-btn" id="btnEnableCompass">Activer la boussole</button>
-        <div class="hint-text">Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.</div>
+        <button class="primary-btn" id="btnEnableCompass" data-i18n="enableCompass">Activer la boussole</button>
+        <div class="hint-text" data-i18n="compassHint">Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.</div>
       </div>
     </div>
   </section>
@@ -484,23 +518,28 @@
     <div id="quranListWrap">
       <div class="section-title">
         <svg class="divider-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/></svg>
-        Le Saint Coran
+      <span data-i18n="quranTitle">Le Saint Coran</span>
       </div>
       <div class="search-box">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-        <input id="surahSearch" type="text" placeholder="Rechercher une sourate…">
+        <input id="surahSearch" type="text" placeholder="Rechercher une sourate…" data-i18n-placeholder="searchSurah">
       </div>
       <div class="surah-list" id="surahList">
         <div class="spinner"></div>
       </div>
     </div>
 
-    <div id="quranDetailWrap" style="display:none;">
+    <div id="quranDetailWrap" data-quran-language="fr" style="display:none;">
       <div class="surah-detail-header">
         <button class="back-btn" id="btnBackToList">
           <svg viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="surah-detail-title" id="surahDetailTitle">—<span class="ar" id="surahDetailTitleAr"></span></div>
+      </div>
+      <div class="quran-language-switch" role="group" aria-label="Langue du texte">
+        <button class="quran-language-btn" type="button" data-quran-language="en">EN</button>
+        <button class="quran-language-btn active" type="button" data-quran-language="fr">FR</button>
+        <button class="quran-language-btn" type="button" data-quran-language="ar">AR</button>
       </div>
       <div class="bismillah" id="bismillah"></div>
       <div class="tajweed-legend" aria-label="Légende Tajwid">
@@ -525,7 +564,7 @@
   <section class="view" id="view-mosques">
     <div class="section-title">
       <svg class="divider-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/></svg>
-      Mosquées à proximité
+      <span data-i18n="nearbyMosques">Mosquées à proximité</span>
     </div>
     <div class="position-chip" id="positionChipMosques" style="display:none;">
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.2" stroke="currentColor" stroke-width="2"/></svg>
@@ -542,19 +581,19 @@
   <nav class="tabbar">
     <button class="tab-btn active" data-view="prayer">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 7v5l3.5 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-      <span>Prières</span>
+      <span data-i18n="navPrayers">Prières</span>
     </button>
     <button class="tab-btn" data-view="qibla">
       <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15.5 8.5l-2.2 5.8-5.8 2.2 2.2-5.8z" fill="currentColor"/></svg>
-      <span>Qibla</span>
+      <span data-i18n="navQibla">Qibla</span>
     </button>
     <button class="tab-btn" data-view="quran">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5C4.7 20 4 19.3 4 18.5v-13zM20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5v-13z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      <span>Coran</span>
+      <span data-i18n="navQuran">Coran</span>
     </button>
     <button class="tab-btn" data-view="mosques">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 21V10l8-6 8 6v11M9 21v-6h6v6M12 4v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Mosquées</span>
+      <span data-i18n="navMosques">Mosquées</span>
     </button>
   </nav>
 </div>
@@ -566,6 +605,26 @@
   /* ---------- Tabs ---------- */
   const tabs = document.querySelectorAll('.tab-btn');
   const views = { prayer: document.getElementById('view-prayer'), qibla: document.getElementById('view-qibla'), quran: document.getElementById('view-quran'), mosques: document.getElementById('view-mosques') };
+  const UI = {
+    fr: { brandSub:'Coran · Prières · Qibla · Mosquées', nextPrayer:'Prochaine prière', myPosition:'Ma position', cityPlaceholder:'Ou entrez une ville, un pays', validate:'Valider', prayerTimes:'Horaires du jour', qiblaTitle:'Direction de la Qibla', enableCompass:'Activer la boussole', compassHint:"Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.", quranTitle:'Le Saint Coran', searchSurah:'Rechercher une sourate…', nearbyMosques:'Mosquées à proximité', navPrayers:'Prières', navQibla:'Qibla', navQuran:'Coran', navMosques:'Mosquées' },
+    en: { brandSub:'Quran · Prayers · Qibla · Mosques', nextPrayer:'Next prayer', myPosition:'My location', cityPlaceholder:'Or enter a city, country', validate:'Confirm', prayerTimes:"Today's prayer times", qiblaTitle:'Qibla direction', enableCompass:'Enable compass', compassHint:'Hold your phone flat, screen facing up, then turn until the gold arrow points upward.', quranTitle:'The Holy Quran', searchSurah:'Search a surah…', nearbyMosques:'Nearby mosques', navPrayers:'Prayers', navQibla:'Qibla', navQuran:'Quran', navMosques:'Mosques' },
+    ar: { brandSub:'القرآن · الصلاة · القبلة · المساجد', nextPrayer:'الصلاة القادمة', myPosition:'موقعي', cityPlaceholder:'أدخل المدينة والبلد', validate:'تأكيد', prayerTimes:'مواقيت الصلاة اليوم', qiblaTitle:'اتجاه القبلة', enableCompass:'تفعيل البوصلة', compassHint:'أمسك هاتفك بشكل مسطّح والشاشة للأعلى، ثم استدر حتى يشير السهم الذهبي إلى الأعلى.', quranTitle:'القرآن الكريم', searchSurah:'ابحث عن سورة…', nearbyMosques:'المساجد القريبة', navPrayers:'الصلاة', navQibla:'القبلة', navQuran:'القرآن', navMosques:'المساجد' }
+  };
+  let currentLanguage = 'fr';
+  function t(key){ return (UI[currentLanguage] && UI[currentLanguage][key]) || UI.fr[key] || key; }
+  function applyLanguage(language){
+    currentLanguage = UI[language] ? language : 'fr';
+    document.documentElement.lang = currentLanguage;
+    document.documentElement.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ el.placeholder = t(el.dataset.i18nPlaceholder); });
+    quranDetailWrap.dataset.quranLanguage = currentLanguage;
+    document.querySelectorAll('.quran-language-btn').forEach(button=>{
+      button.classList.toggle('active', button.dataset.quranLanguage === currentLanguage);
+    });
+    renderDates();
+    if(timings) renderPrayerList();
+  }
   tabs.forEach(t=>{
     t.addEventListener('click', ()=>{
       tabs.forEach(x=>x.classList.remove('active'));
@@ -585,19 +644,24 @@
         new Intl.DateTimeFormat('fr-TN-u-ca-islamic', { day:'numeric', month:'long', year:'numeric' }).format(now);
     }catch(e){ document.getElementById('hijriDate').textContent = ''; }
     const h = now.getHours();
-    document.getElementById('greeting').textContent = h < 5 ? 'Bonne nuit' : h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir';
+    const greetings = {
+      fr: h < 5 ? 'Bonne nuit' : h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir',
+      en: h < 5 ? 'Good night' : h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening',
+      ar: h < 5 ? 'ليلة سعيدة' : h < 12 ? 'صباح الخير' : h < 18 ? 'مساء الخير' : 'مساء الخير'
+    };
+    document.getElementById('greeting').textContent = greetings[currentLanguage];
   }
   renderDates();
   setInterval(renderDates, 60000);
 
   /* ================= PRAYER TIMES ================= */
   const PRAYER_DEFS = [
-    { key:'Fajr', fr:'Fajr', ar:'الفجر', icon:'M12 3v6M6 21h12M8 12l4-5 4 5M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7' },
-    { key:'Sunrise', fr:'Lever du soleil', ar:'الشروق', icon:'M12 3v4M5 12H2M22 12h-3M4.5 19.5L7 17M19.5 19.5L17 17M12 8a5 5 0 015 5H7a5 5 0 015-5z' },
-    { key:'Dhuhr', fr:'Dhuhr', ar:'الظهر', icon:'M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1M12 8a4 4 0 100 8 4 4 0 000-8z' },
-    { key:'Asr', fr:'Asr', ar:'العصر', icon:'M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M12 8a4 4 0 100 8 4 4 0 000-8z' },
-    { key:'Maghrib', fr:'Maghrib', ar:'المغرب', icon:'M12 3v6M3 21h18M6 17a6 6 0 0112 0M8 12l4-4 4 4' },
-    { key:'Isha', fr:'Isha', ar:'العشاء', icon:'M20 14.5a8 8 0 11-9.5-9.4 6.5 6.5 0 009.5 9.4z' }
+    { key:'Fajr', fr:'Fajr', en:'Fajr', ar:'الفجر', icon:'M12 3v6M6 21h12M8 12l4-5 4 5M5 21c0-3.9 3.1-7 7-7s7 3.1 7 7' },
+    { key:'Sunrise', fr:'Lever du soleil', en:'Sunrise', ar:'الشروق', icon:'M12 3v4M5 12H2M22 12h-3M4.5 19.5L7 17M19.5 19.5L17 17M12 8a5 5 0 015 5H7a5 5 0 015-5z' },
+    { key:'Dhuhr', fr:'Dhuhr', en:'Dhuhr', ar:'الظهر', icon:'M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1M12 8a4 4 0 100 8 4 4 0 000-8z' },
+    { key:'Asr', fr:'Asr', en:'Asr', ar:'العصر', icon:'M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M12 8a4 4 0 100 8 4 4 0 000-8z' },
+    { key:'Maghrib', fr:'Maghrib', en:'Maghrib', ar:'المغرب', icon:'M12 3v6M3 21h18M6 17a6 6 0 0112 0M8 12l4-4 4 4' },
+    { key:'Isha', fr:'Isha', en:'Isha', ar:'العشاء', icon:'M20 14.5a8 8 0 11-9.5-9.4 6.5 6.5 0 009.5 9.4z' }
   ];
 
   let coords = null; // {lat, lng}
@@ -687,11 +751,13 @@
       if(!nextEntry && !passed && def.key !== 'Sunrise'){ nextEntry = { def, t, raw }; }
 
       const row = document.createElement('div');
+      const prayerName = def[currentLanguage] || def.fr;
+      const secondaryName = currentLanguage === 'ar' ? '' : def.ar;
       row.className = 'prayer-row' + (passed ? ' passed' : '');
       row.innerHTML =
         '<div class="pr-left">' +
           '<svg class="pr-icon" viewBox="0 0 24 24" fill="none"><path d="' + def.icon + '" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-          '<div><div class="pr-name">' + def.fr + '</div><div class="pr-name-ar">' + def.ar + '</div></div>' +
+          '<div><div class="pr-name">' + prayerName + '</div><div class="pr-name-ar">' + secondaryName + '</div></div>' +
         '</div>' +
         '<div class="pr-time">' + raw.split(' ')[0] + '</div>';
       list.appendChild(row);
@@ -713,7 +779,9 @@
   let currentNext = null;
   function updateNextPrayerCard(entry){
     currentNext = entry;
-    document.getElementById('npName').innerHTML = entry.def.fr + '<span class="ar">' + entry.def.ar + '</span>';
+    const prayerName = entry.def[currentLanguage] || entry.def.fr;
+    const secondaryName = currentLanguage === 'ar' ? '' : '<span class="ar">' + entry.def.ar + '</span>';
+    document.getElementById('npName').innerHTML = prayerName + secondaryName;
     document.getElementById('npTime').textContent = entry.raw.split(' ')[0];
   }
 
@@ -1046,6 +1114,14 @@
     renderSurahList(filtered);
   });
 
+  const quranDetailWrap = document.getElementById('quranDetailWrap');
+  document.querySelectorAll('.quran-language-btn').forEach(button=>{
+    button.addEventListener('click', ()=>{
+      applyLanguage(button.dataset.quranLanguage);
+    });
+  });
+  applyLanguage(currentLanguage);
+
   /* ---------- Quran audio / reciters ---------- */
   const recitationPanel = document.getElementById('recitationPanel');
   const reciterSelect = document.getElementById('reciterSelect');
@@ -1150,7 +1226,7 @@
     loadReciters();
     loadChapterRecitation();
 
-    const editionsUrl = 'https://api.alquran.cloud/v1/surah/' + s.number + '/editions/quran-uthmani,fr.hamidullah';
+    const editionsUrl = 'https://api.alquran.cloud/v1/surah/' + s.number + '/editions/quran-uthmani,fr.hamidullah,en.sahih';
     const tajweedUrl = 'https://api.quran.com/api/v4/quran/verses/uthmani_tajweed?chapter_number=' + s.number;
 
     // The Tajwid endpoint contains only safe Quran markup (<tajweed> and the
@@ -1161,9 +1237,10 @@
       fetch(tajweedUrl).then(r=>r.ok ? r.json() : null).catch(()=>null)
     ])
       .then(([data, tajweedData])=>{
-        if(!data || !data.data || data.data.length < 2){ throw new Error('bad'); }
+        if(!data || !data.data || data.data.length < 3){ throw new Error('bad'); }
         const arabicEdition = data.data[0].ayahs;
         const frEdition = data.data[1].ayahs;
+        const enEdition = data.data[2].ayahs;
         const tajweedByVerse = new Map(((tajweedData && tajweedData.verses) || [])
           .map(v=>[v.verse_key, v.text_uthmani_tajweed]));
         ayahList.innerHTML = '';
@@ -1174,7 +1251,8 @@
           div.innerHTML =
             '<div class="ayah-num">' + a.numberInSurah + '</div>' +
             '<div class="ayah-ar">' + (tajweedText ? formatTajweed(tajweedText) : a.text) + '</div>' +
-            '<div class="ayah-fr">' + (frEdition[i] ? frEdition[i].text : '') + '</div>';
+            '<div class="ayah-fr"><span class="translation-label">Français</span>' + (frEdition[i] ? frEdition[i].text : '') + '</div>' +
+            '<div class="ayah-en"><span class="translation-label">English</span>' + (enEdition[i] ? enEdition[i].text : '') + '</div>';
           ayahList.appendChild(div);
         });
       })
