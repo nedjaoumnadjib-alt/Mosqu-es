@@ -437,8 +437,11 @@
   .event-date b{ font-size:19px; }.event-date span{ margin-top:4px; font-size:9px; text-transform:uppercase; }
   .event-main{ min-width:0; flex:1; }.event-type{ color:var(--primary-light); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }.event-name{ margin-top:4px; font-size:14px; font-weight:700; }.event-meta{ margin-top:4px; color:var(--text-muted); font-size:11px; }
   .event-actions{ display:flex; gap:7px; margin-top:10px; }.event-action{ padding:6px 8px; border-radius:8px; border:1px solid rgba(45,212,191,.3); background:rgba(45,212,191,.08); color:var(--primary-light); font:inherit; font-size:10.5px; font-weight:700; }.event-action.rsvp{ border-color:rgba(232,199,102,.3); color:var(--gold-light); background:rgba(201,162,39,.09); }
+  /* ===== Digital Tasbih ===== */
+  .tasbih-card{ margin:16px 0 18px; padding:18px; border:1px solid var(--border); border-radius:18px; text-align:center; background:linear-gradient(145deg, rgba(28,111,99,.48), rgba(18,57,51,.88)); }.tasbih-title{ color:var(--gold-light); font-family:var(--font-head); font-size:22px; }.tasbih-dhikr{ margin:14px 0 3px; font-family:var(--font-arabic); font-size:29px; }.tasbih-count{ font-size:48px; font-weight:800; line-height:1.05; color:var(--primary-light); font-variant-numeric:tabular-nums; }.tasbih-goal{ margin-top:5px; color:var(--text-muted); font-size:12px; }.tasbih-add{ width:104px; height:104px; margin:17px auto 14px; border:2px solid rgba(45,212,191,.52); border-radius:50%; color:#06231E; background:var(--primary-light); box-shadow:0 0 0 8px rgba(45,212,191,.08); font:700 42px var(--font-body); }.tasbih-add:active{ transform:scale(.96); }.tasbih-actions{ display:flex; justify-content:center; gap:10px; }.tasbih-reset,.tasbih-custom{ padding:8px 11px; border:1px solid rgba(232,199,102,.25); border-radius:9px; color:var(--text-muted); background:rgba(243,236,217,.05); font:inherit; font-size:11px; font-weight:700; }.tasbih-presets{ display:flex; flex-wrap:wrap; justify-content:center; gap:7px; margin-top:17px; }.tasbih-preset{ padding:7px 9px; border:1px solid rgba(45,212,191,.25); border-radius:999px; color:var(--text-muted); background:rgba(45,212,191,.06); font:inherit; font-size:10.5px; }.tasbih-preset.active{ color:#06231E; background:var(--gold-light); border-color:var(--gold-light); font-weight:800; }
   .simple-calendar{ padding:14px; border:1px solid var(--border); border-radius:16px; background:var(--surface); }
   .calendar-month{ text-align:center; font-family:var(--font-head); font-size:22px; color:var(--gold-light); margin-bottom:14px; }
+  .calendar-nav{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:13px; }.calendar-nav-btn{ width:32px; height:32px; border:1px solid var(--border); border-radius:9px; color:var(--primary-light); background:rgba(45,212,191,.07); font:700 19px var(--font-body); }.calendar-month{ flex:1; border:0; text-align:center; color:var(--gold-light); background:transparent; font:inherit; font-size:16px; font-weight:700; text-transform:capitalize; }.calendar-month::after{ content:' ▾'; color:var(--text-muted); font-size:11px; }.calendar-month-picker{ position:absolute; width:1px; height:1px; opacity:0; pointer-events:none; }.calendar-today{ padding:6px 8px; border:0; color:var(--text-muted); background:transparent; font:inherit; font-size:10px; }
   .calendar-weekdays,.calendar-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }.calendar-weekdays span{ text-align:center; color:var(--text-muted); font-size:9px; font-weight:700; }.calendar-day{ min-height:39px; padding-top:5px; text-align:center; border-radius:8px; color:var(--text-muted); font-size:11px; }.calendar-day.today{ color:var(--text); background:rgba(45,212,191,.14); border:1px solid rgba(45,212,191,.35); }.calendar-day.event{ color:var(--bg); background:var(--gold-light); font-weight:800; }.calendar-day span{ display:block; margin:2px auto 0; width:5px; height:5px; border-radius:50%; background:currentColor; }.calendar-key{ display:flex; flex-direction:column; gap:8px; margin-top:16px; padding-top:13px; border-top:1px solid var(--border); }.calendar-key-item{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }.calendar-key-dot{ width:10px; height:10px; border-radius:50%; background:var(--gold-light); flex:0 0 auto; }
   .spinner{
     width:22px; height:22px; border-radius:50%; border:2px solid var(--border);
@@ -632,11 +635,6 @@
         </button>
         <div class="surah-detail-title" id="surahDetailTitle">—<span class="ar" id="surahDetailTitleAr"></span></div>
       </div>
-      <div class="quran-language-switch" role="group" aria-label="Langue du texte">
-        <button class="quran-language-btn" type="button" data-quran-language="en">EN</button>
-        <button class="quran-language-btn active" type="button" data-quran-language="fr">FR</button>
-        <button class="quran-language-btn" type="button" data-quran-language="ar">AR</button>
-      </div>
       <div class="bismillah" id="bismillah"></div>
       <div class="tajweed-legend" aria-label="Légende Tajwid">
         <span><i style="background:#55D99A"></i>Ghunnah</span>
@@ -664,13 +662,13 @@
       <span data-i18n="eventsTitle">Événements & calendrier</span>
     </div>
     <div class="simple-calendar">
-      <div class="calendar-month" id="calendarMonth"></div>
+      <div class="calendar-nav"><button class="calendar-nav-btn" id="btnCalendarPrev" type="button" aria-label="Mois précédent">‹</button><button class="calendar-month" id="calendarMonth" type="button" aria-label="Choisir un mois"></button><button class="calendar-nav-btn" id="btnCalendarNext" type="button" aria-label="Mois suivant">›</button></div>
+      <input class="calendar-month-picker" id="calendarMonthPicker" type="month" aria-label="Choisir un mois et une année">
       <div class="calendar-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
       <div class="calendar-grid" id="calendarGrid"></div>
       <div class="calendar-key" id="calendarKey"></div>
+      <button class="calendar-today" id="btnCalendarToday" type="button">Aujourd’hui</button>
     </div>
-    <div class="event-filters" id="eventFilters"></div>
-    <div class="event-list" id="eventList"></div>
   </section>
 
   <!-- ============ MOSQUEES ============ -->
@@ -681,6 +679,15 @@
       <span data-i18n="adhkarTitle">Adhkār & invocations</span>
     </div>
     <p class="adhkar-intro" data-i18n="adhkarIntro">Les invocations authentiques du matin, du soir et des moments du quotidien.</p>
+    <section class="tasbih-card" aria-label="Tasbih numérique">
+      <div class="tasbih-title">📿 Tasbih numérique</div>
+      <div class="tasbih-dhikr" id="tasbihDhikr">سُبْحَانَ اللَّهِ</div>
+      <div class="tasbih-count" id="tasbihCount" aria-live="polite">0</div>
+      <div class="tasbih-goal" id="tasbihGoal">0 / 33</div>
+      <button class="tasbih-add" id="btnTasbihAdd" type="button" aria-label="Ajouter une récitation">+</button>
+      <div class="tasbih-actions"><button class="tasbih-reset" id="btnTasbihReset" type="button">Réinitialiser</button><button class="tasbih-custom" id="btnTasbihCustom" type="button">Compteur personnalisé</button></div>
+      <div class="tasbih-presets" id="tasbihPresets"></div>
+    </section>
     <div class="adhkar-groups" id="adhkarGroups"></div>
   </section>
 
@@ -763,12 +770,15 @@
   let authMode = 'signIn';
   let favoriteSurahIds = [];
   try{ favoriteSurahIds = JSON.parse(localStorage.getItem('favoriteSurahIds')) || []; }catch(e){}
+  let tasbihState = { label:'SubhanAllah', arabic:'سُبْحَانَ اللَّهِ', goal:33, count:0, custom:false };
+  try{ const savedTasbih = JSON.parse(localStorage.getItem('tasbihState')); if(savedTasbih && typeof savedTasbih === 'object') tasbihState = { ...tasbihState, ...savedTasbih }; }catch(e){}
 
   function getSyncData(){
     return {
       quranProgress: quranProgress || {},
       favoriteSurahIds: favoriteSurahIds || [],
       registeredEventIds: registeredEventIds || [],
+      tasbihState: tasbihState || {},
       settings: {
         language: currentLanguage,
         prayerReminderKeys: activePrayerReminders || [],
@@ -789,6 +799,7 @@
     if(data.quranProgress && typeof data.quranProgress === 'object') quranProgress = { ...DEFAULT_QURAN_PROGRESS, ...data.quranProgress };
     if(Array.isArray(data.favoriteSurahIds)) favoriteSurahIds = data.favoriteSurahIds;
     if(Array.isArray(data.registeredEventIds)) registeredEventIds = data.registeredEventIds;
+    if(data.tasbihState && typeof data.tasbihState === 'object') tasbihState = { ...tasbihState, ...data.tasbihState };
     const settings = data.settings || {};
     if(Array.isArray(settings.prayerReminderKeys)) activePrayerReminders = settings.prayerReminderKeys;
     if(settings.jumuahTime) document.getElementById('jumuahTime').value = settings.jumuahTime;
@@ -797,10 +808,11 @@
       localStorage.setItem('quranReadingProgress', JSON.stringify(quranProgress));
       localStorage.setItem('favoriteSurahIds', JSON.stringify(favoriteSurahIds));
       localStorage.setItem('registeredMosqueEvents', JSON.stringify(registeredEventIds));
+      localStorage.setItem('tasbihState', JSON.stringify(tasbihState));
       localStorage.setItem('prayerReminderKeys', JSON.stringify(activePrayerReminders));
       localStorage.setItem('jumuahTime', document.getElementById('jumuahTime').value);
     }catch(e){}
-    renderQuranProgress(); renderNotificationPrayerList(); renderEvents();
+    renderQuranProgress(); renderNotificationPrayerList(); renderEvents(); renderTasbih();
     if(surahCache) renderSurahList(surahCache);
   }
   function setAuthStatus(message, isError){ const node = document.getElementById('authStatus'); node.textContent = message || ''; node.classList.toggle('error', Boolean(isError)); }
@@ -868,6 +880,37 @@
   });
 
   /* ================= ADHKAR ================= */
+  const TASBIH_PRESETS = [
+    { label:'SubhanAllah ×33', arabic:'سُبْحَانَ اللَّهِ', goal:33 },
+    { label:'Alhamdulillah ×33', arabic:'ٱلْحَمْدُ لِلَّٰهِ', goal:33 },
+    { label:'Allahu Akbar ×34', arabic:'ٱللَّٰهُ أَكْبَرُ', goal:34 }
+  ];
+  function saveTasbih(){ try{ localStorage.setItem('tasbihState', JSON.stringify(tasbihState)); }catch(e){} syncToCloud(); }
+  function renderTasbih(){
+    const count = document.getElementById('tasbihCount'); if(!count) return;
+    document.getElementById('tasbihDhikr').textContent = tasbihState.arabic;
+    count.textContent = tasbihState.count;
+    document.getElementById('tasbihGoal').textContent = tasbihState.count + ' / ' + tasbihState.goal;
+    const presets = document.getElementById('tasbihPresets'); presets.innerHTML = '';
+    [...TASBIH_PRESETS, { label:'Compteur personnalisé', custom:true }].forEach(preset=>{
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'tasbih-preset' + ((preset.custom ? tasbihState.custom : !tasbihState.custom && tasbihState.arabic === preset.arabic && tasbihState.goal === preset.goal) ? ' active' : ''); button.textContent = preset.label;
+      button.addEventListener('click', ()=>{
+        if(preset.custom){ document.getElementById('btnTasbihCustom').click(); return; }
+        tasbihState = { ...preset, count:0, custom:false }; saveTasbih(); renderTasbih();
+      }); presets.appendChild(button);
+    });
+  }
+  document.getElementById('btnTasbihAdd').addEventListener('click', ()=>{ tasbihState.count += 1; saveTasbih(); renderTasbih(); });
+  document.getElementById('btnTasbihReset').addEventListener('click', ()=>{ tasbihState.count = 0; saveTasbih(); renderTasbih(); });
+  document.getElementById('btnTasbihCustom').addEventListener('click', ()=>{
+    const goal = Number(window.prompt('Nombre de récitations souhaité', tasbihState.goal));
+    if(!Number.isFinite(goal) || goal < 1) return;
+    const label = window.prompt('Nom du dhikr', tasbihState.label || 'Mon dhikr');
+    if(label === null) return;
+    tasbihState = { label:label.trim() || 'Mon dhikr', arabic:label.trim() || 'ذِكْر', goal:Math.round(goal), count:0, custom:true }; saveTasbih(); renderTasbih();
+  });
+  renderTasbih();
+
   const ADHKAR = [
     { title:{fr:'Adhkār du matin', en:'Morning adhkār', ar:'أذكار الصباح'}, open:true, items:[
       { ar:'أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ — اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ…', tr:'A‘ūdhu billāhi mina sh-shayṭāni r-rajīm. Allāhu lā ilāha illā huwa l-ḥayyu l-qayyūm…', meaning:'Āyat al-Kursī (Al-Baqara 2:255).', count:'1×' },
@@ -1010,12 +1053,15 @@
     }
     return null;
   }
+  let calendarCursor = new Date();
+  calendarCursor.setDate(1);
   function renderEvents(){
     const monthLabel = document.getElementById('calendarMonth');
     const grid = document.getElementById('calendarGrid');
     const key = document.getElementById('calendarKey');
     if(!monthLabel || !grid || !key) return;
     const today = new Date();
+    const visibleMonth = new Date(calendarCursor.getFullYear(), calendarCursor.getMonth(), 1);
     const jumuah = nextWeekday(5);
     const ramadan = nextIslamicDate(9, 1);
     const eid = nextIslamicDate(10, 1);
@@ -1024,21 +1070,22 @@
       { name:'Début du Ramadan', date:ramadan },
       { name:'Eid al-Fitr', date:eid }
     ].filter(event=>event.date);
-    monthLabel.textContent = today.toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+    monthLabel.textContent = visibleMonth.toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+    document.getElementById('calendarMonthPicker').value = visibleMonth.getFullYear() + '-' + String(visibleMonth.getMonth() + 1).padStart(2, '0');
     grid.innerHTML = '';
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const firstDay = visibleMonth;
     const emptyDays = (firstDay.getDay() + 6) % 7;
     for(let i=0; i<emptyDays; i++) grid.appendChild(document.createElement('span'));
-    const daysInMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+    const daysInMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth()+1, 0).getDate();
     for(let day=1; day<=daysInMonth; day++){
       const cell = document.createElement('div'); cell.className = 'calendar-day'; cell.textContent = day;
-      const cellDate = new Date(today.getFullYear(), today.getMonth(), day);
-      if(day === today.getDate()) cell.classList.add('today');
+      const cellDate = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth(), day);
+      if(cellDate.toDateString() === today.toDateString()) cell.classList.add('today');
       if(importantDates.some(event=>event.date.toDateString() === cellDate.toDateString())){ cell.classList.add('event'); cell.appendChild(document.createElement('span')); }
       grid.appendChild(cell);
     }
     key.innerHTML = '';
-    importantDates.forEach(event=>{
+    importantDates.filter(event=>event.date.getFullYear() === visibleMonth.getFullYear() && event.date.getMonth() === visibleMonth.getMonth()).forEach(event=>{
       const item = document.createElement('div'); item.className = 'calendar-key-item';
       item.innerHTML = '<i class="calendar-key-dot"></i><span></span>';
       item.querySelector('span').textContent = event.name + ' · ' + event.date.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
@@ -1046,6 +1093,17 @@
     });
     renderEventsLegacy();
   }
+  document.getElementById('btnCalendarPrev').addEventListener('click', ()=>{ calendarCursor.setMonth(calendarCursor.getMonth() - 1); renderEvents(); });
+  document.getElementById('btnCalendarNext').addEventListener('click', ()=>{ calendarCursor.setMonth(calendarCursor.getMonth() + 1); renderEvents(); });
+  document.getElementById('btnCalendarToday').addEventListener('click', ()=>{ calendarCursor = new Date(); calendarCursor.setDate(1); renderEvents(); });
+  document.getElementById('calendarMonth').addEventListener('click', ()=>{
+    const picker = document.getElementById('calendarMonthPicker');
+    if(typeof picker.showPicker === 'function') picker.showPicker(); else picker.focus();
+  });
+  document.getElementById('calendarMonthPicker').addEventListener('change', event=>{
+    const [year, month] = event.target.value.split('-').map(Number);
+    if(year && month){ calendarCursor = new Date(year, month - 1, 1); renderEvents(); }
+  });
 
   /* ---------- Date / greeting ---------- */
   function renderDates(){
