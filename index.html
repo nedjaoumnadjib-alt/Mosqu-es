@@ -151,6 +151,32 @@
     margin-top:10px; font-size:13px; color:var(--primary-light);
   }
 
+  /* ===== Notifications ===== */
+  .notification-panel{ margin:14px 0 2px; padding:14px; border-radius:15px; background:rgba(18,57,51,0.78); border:1px solid var(--border); }
+  .notification-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .notification-title{ font-size:14px; font-weight:700; }
+  .notification-sub{ margin-top:4px; color:var(--text-muted); font-size:11.5px; line-height:1.45; }
+  .notification-btn{ border:1px solid rgba(45,212,191,0.35); border-radius:9px; padding:8px 10px; color:var(--primary-light); background:rgba(45,212,191,0.10); font:inherit; font-size:12px; font-weight:700; white-space:nowrap; }
+  .notification-btn:disabled{ opacity:0.65; cursor:default; }
+  .jumuah-setting{ display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:11px; border-top:1px solid rgba(232,199,102,0.10); }
+  .jumuah-setting label{ flex:1; font-size:12px; color:var(--text-muted); }
+  .jumuah-setting input{ width:82px; border:1px solid var(--border); border-radius:8px; padding:7px; background:var(--bg-alt); color:var(--text); font:inherit; }
+  .notification-schedule{ padding:0; overflow:hidden; }
+  .notification-schedule .notification-head{ padding:14px; }
+  .notification-table{ margin:0 10px 10px; overflow:hidden; border:1px solid rgba(45,212,191,0.18); border-radius:12px; }
+  .notification-table-head,.notification-prayer-row{ display:grid; grid-template-columns:1.35fr 1fr 42px; align-items:center; column-gap:8px; }
+  .notification-table-head{ padding:8px 11px; background:rgba(45,212,191,0.08); color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:.05em; }
+  .notification-prayer-row{ min-height:42px; padding:7px 11px; border-top:1px solid rgba(232,199,102,0.09); font-size:12px; }
+  .notification-prayer-name{ display:flex; align-items:center; gap:7px; font-weight:600; }
+  .notification-prayer-name::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--primary-light); box-shadow:0 0 8px rgba(45,212,191,.7); }
+  .notification-prayer-time{ color:var(--primary-light); font-variant-numeric:tabular-nums; }
+  .prayer-bell{ justify-self:end; display:grid; place-items:center; width:28px; height:28px; padding:0; border:0; border-radius:8px; background:transparent; color:var(--text-muted); cursor:pointer; }
+  .prayer-bell svg{ width:17px; height:17px; }
+  .prayer-bell.active{ color:var(--primary-light); background:rgba(45,212,191,.12); }
+  .jumuah-card{ margin:0 10px 10px; padding:12px; border:1px solid rgba(45,212,191,0.2); border-radius:12px; background:rgba(10,33,30,.38); }
+  .jumuah-card-title{ margin-bottom:8px; font-size:13px; font-weight:700; }
+  .jumuah-card .jumuah-setting{ margin:0; padding:0; border:0; }
+
   /* ===== Sections ===== */
   .view{ display:none; padding:18px 20px 8px; flex:1; }
   .view.active{ display:block; }
@@ -467,6 +493,28 @@
       <div class="np-countdown" id="npCountdown">Recherche de votre position…</div>
     </div>
 
+    <div class="notification-panel notification-schedule">
+      <div class="notification-head">
+        <div>
+          <div class="notification-title" data-i18n="notificationsTitle">🔔 Notifications</div>
+          <div class="notification-sub" id="notificationStatus" data-i18n="notificationsHint">Activez les rappels de prière et les annonces importantes.</div>
+        </div>
+        <button class="notification-btn" id="btnNotifications" type="button" data-i18n="enableNotifications">Activer</button>
+      </div>
+      <div class="notification-table">
+        <div class="notification-table-head"><span data-i18n="prayerColumn">Prière</span><span data-i18n="adhanColumn">Adhan</span><span aria-label="Notifications">🔔</span></div>
+        <div id="notificationPrayerList"></div>
+      </div>
+      <div class="jumuah-card">
+        <div class="jumuah-card-title">Jumu'ah</div>
+        <div class="jumuah-setting">
+          <label for="jumuahTime" data-i18n="jumuahTime">Heure du Jumu'ah</label>
+          <input id="jumuahTime" type="time" value="13:30" aria-label="Heure du Jumu'ah">
+          <button class="notification-btn" id="btnSaveJumuah" type="button" data-i18n="save">Enregistrer</button>
+        </div>
+      </div>
+    </div>
+
     <div class="loc-box">
       <button class="loc-btn" id="btnGeoloc" type="button">
         <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -636,9 +684,9 @@
   const tabs = document.querySelectorAll('.tab-btn');
   const views = { prayer: document.getElementById('view-prayer'), qibla: document.getElementById('view-qibla'), quran: document.getElementById('view-quran'), adhkar: document.getElementById('view-adhkar'), mosques: document.getElementById('view-mosques') };
   const UI = {
-    fr: { brandSub:'Coran · Prières · Qibla · Mosquées', nextPrayer:'Prochaine prière', myPosition:'Ma position', cityPlaceholder:'Ou entrez une ville, un pays', validate:'Valider', prayerTimes:'Horaires du jour', qiblaTitle:'Direction de la Qibla', enableCompass:'Activer la boussole', compassHint:"Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.", quranTitle:'Le Saint Coran', searchSurah:'Rechercher une sourate…', adhkarTitle:'Adhkār & invocations', adhkarIntro:'Les invocations authentiques du matin, du soir et des moments du quotidien.', nearbyMosques:'Mosquées à proximité', navPrayers:'Prières', navQibla:'Qibla', navQuran:'Coran', navAdhkar:'Adhkār', navMosques:'Mosquées' },
-    en: { brandSub:'Quran · Prayers · Qibla · Mosques', nextPrayer:'Next prayer', myPosition:'My location', cityPlaceholder:'Or enter a city, country', validate:'Confirm', prayerTimes:"Today's prayer times", qiblaTitle:'Qibla direction', enableCompass:'Enable compass', compassHint:'Hold your phone flat, screen facing up, then turn until the gold arrow points upward.', quranTitle:'The Holy Quran', searchSurah:'Search a surah…', adhkarTitle:'Adhkār & supplications', adhkarIntro:'Authentic supplications for the morning, evening, and daily moments.', nearbyMosques:'Nearby mosques', navPrayers:'Prayers', navQibla:'Qibla', navQuran:'Quran', navAdhkar:'Adhkār', navMosques:'Mosques' },
-    ar: { brandSub:'القرآن · الصلاة · القبلة · المساجد', nextPrayer:'الصلاة القادمة', myPosition:'موقعي', cityPlaceholder:'أدخل المدينة والبلد', validate:'تأكيد', prayerTimes:'مواقيت الصلاة اليوم', qiblaTitle:'اتجاه القبلة', enableCompass:'تفعيل البوصلة', compassHint:'أمسك هاتفك بشكل مسطّح والشاشة للأعلى، ثم استدر حتى يشير السهم الذهبي إلى الأعلى.', quranTitle:'القرآن الكريم', searchSurah:'ابحث عن سورة…', adhkarTitle:'الأذكار والأدعية', adhkarIntro:'أذكار الصباح والمساء وأدعية الحياة اليومية.', nearbyMosques:'المساجد القريبة', navPrayers:'الصلاة', navQibla:'القبلة', navQuran:'القرآن', navAdhkar:'الأذكار', navMosques:'المساجد' }
+    fr: { brandSub:'Coran · Prières · Qibla · Mosquées', nextPrayer:'Prochaine prière', myPosition:'Ma position', cityPlaceholder:'Ou entrez une ville, un pays', validate:'Valider', prayerTimes:'Horaires du jour', notificationsTitle:'🔔 Notifications', notificationsHint:'Activez les rappels de prière et les annonces importantes.', enableNotifications:'Activer', notificationsEnabled:'Rappels activés : Maghrib, Jumu’ah et Ramadan.', prayerColumn:'Prière', adhanColumn:'Adhan', jumuahTime:"Heure du Jumu'ah", save:'Enregistrer', qiblaTitle:'Direction de la Qibla', enableCompass:'Activer la boussole', compassHint:"Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.", quranTitle:'Le Saint Coran', searchSurah:'Rechercher une sourate…', adhkarTitle:'Adhkār & invocations', adhkarIntro:'Les invocations authentiques du matin, du soir et des moments du quotidien.', nearbyMosques:'Mosquées à proximité', navPrayers:'Prières', navQibla:'Qibla', navQuran:'Coran', navAdhkar:'Adhkār', navMosques:'Mosquées' },
+    en: { brandSub:'Quran · Prayers · Qibla · Mosques', nextPrayer:'Next prayer', myPosition:'My location', cityPlaceholder:'Or enter a city, country', validate:'Confirm', prayerTimes:"Today's prayer times", notificationsTitle:'🔔 Notifications', notificationsHint:'Enable prayer reminders and important announcements.', enableNotifications:'Enable', notificationsEnabled:'Reminders enabled: Maghrib, Jumu’ah and Ramadan.', prayerColumn:'Prayer', adhanColumn:'Adhan', jumuahTime:"Jumu'ah time", save:'Save', qiblaTitle:'Qibla direction', enableCompass:'Enable compass', compassHint:'Hold your phone flat, screen facing up, then turn until the gold arrow points upward.', quranTitle:'The Holy Quran', searchSurah:'Search a surah…', adhkarTitle:'Adhkār & supplications', adhkarIntro:'Authentic supplications for the morning, evening, and daily moments.', nearbyMosques:'Nearby mosques', navPrayers:'Prayers', navQibla:'Qibla', navQuran:'Quran', navAdhkar:'Adhkār', navMosques:'Mosques' },
+    ar: { brandSub:'القرآن · الصلاة · القبلة · المساجد', nextPrayer:'الصلاة القادمة', myPosition:'موقعي', cityPlaceholder:'أدخل المدينة والبلد', validate:'تأكيد', prayerTimes:'مواقيت الصلاة اليوم', notificationsTitle:'🔔 الإشعارات', notificationsHint:'فعّل تذكيرات الصلاة والتنبيهات المهمة.', enableNotifications:'تفعيل', notificationsEnabled:'تم تفعيل تذكيرات المغرب والجمعة ورمضان.', prayerColumn:'الصلاة', adhanColumn:'الأذان', jumuahTime:'وقت صلاة الجمعة', save:'حفظ', qiblaTitle:'اتجاه القبلة', enableCompass:'تفعيل البوصلة', compassHint:'أمسك هاتفك بشكل مسطّح والشاشة للأعلى، ثم استدر حتى يشير السهم الذهبي إلى الأعلى.', quranTitle:'القرآن الكريم', searchSurah:'ابحث عن سورة…', adhkarTitle:'الأذكار والأدعية', adhkarIntro:'أذكار الصباح والمساء وأدعية الحياة اليومية.', nearbyMosques:'المساجد القريبة', navPrayers:'الصلاة', navQibla:'القبلة', navQuran:'القرآن', navAdhkar:'الأذكار', navMosques:'المساجد' }
   };
   let currentLanguage = 'fr';
   function t(key){ return (UI[currentLanguage] && UI[currentLanguage][key]) || UI.fr[key] || key; }
@@ -655,6 +703,8 @@
     renderDates();
     if(timings) renderPrayerList();
     renderAdhkar();
+    renderNotificationPrayerList();
+    updateNotificationUI();
   }
   tabs.forEach(t=>{
     t.addEventListener('click', ()=>{
@@ -759,11 +809,130 @@
     { key:'Maghrib', fr:'Maghrib', en:'Maghrib', ar:'المغرب', icon:'M12 3v6M3 21h18M6 17a6 6 0 0112 0M8 12l4-4 4 4' },
     { key:'Isha', fr:'Isha', en:'Isha', ar:'العشاء', icon:'M20 14.5a8 8 0 11-9.5-9.4 6.5 6.5 0 009.5 9.4z' }
   ];
+  let activePrayerReminders = ['Maghrib'];
+  try{
+    const savedReminders = JSON.parse(localStorage.getItem('prayerReminderKeys'));
+    if(Array.isArray(savedReminders)) activePrayerReminders = savedReminders;
+  }catch(e){}
+
+  function renderNotificationPrayerList(){
+    const list = document.getElementById('notificationPrayerList');
+    if(!list) return;
+    list.innerHTML = '';
+    PRAYER_DEFS.forEach(prayer=>{
+      const row = document.createElement('div');
+      row.className = 'notification-prayer-row';
+      const name = document.createElement('span');
+      name.className = 'notification-prayer-name';
+      name.textContent = prayer[currentLanguage] || prayer.fr;
+      const time = document.createElement('span');
+      time.className = 'notification-prayer-time';
+      time.textContent = timings && timings[prayer.key] ? timings[prayer.key].split(' ')[0] : '—';
+      const bell = document.createElement('button');
+      const enabled = activePrayerReminders.includes(prayer.key);
+      bell.className = 'prayer-bell' + (enabled ? ' active' : '');
+      bell.type = 'button';
+      bell.setAttribute('aria-label', 'Rappel ' + (prayer[currentLanguage] || prayer.fr));
+      bell.setAttribute('aria-pressed', String(enabled));
+      bell.innerHTML = '<svg viewBox="0 0 24 24" fill="none"><path d="M18 9a6 6 0 00-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      bell.addEventListener('click', ()=>{
+        if(activePrayerReminders.includes(prayer.key)) activePrayerReminders = activePrayerReminders.filter(key=>key !== prayer.key);
+        else activePrayerReminders.push(prayer.key);
+        try{ localStorage.setItem('prayerReminderKeys', JSON.stringify(activePrayerReminders)); }catch(e){}
+        renderNotificationPrayerList();
+        schedulePrayerReminders();
+      });
+      row.append(name, time, bell);
+      list.appendChild(row);
+    });
+  }
 
   let coords = null; // {lat, lng}
   let timings = null; // {Fajr:'HH:MM', ...}
+  let prayerReminderTimers = [];
+  renderNotificationPrayerList();
 
   function setLocStatus(msg){ document.getElementById('locStatus').textContent = msg || ''; }
+
+  /* ---------- Browser notifications (while the app is open) ---------- */
+  function setNotificationStatus(message){
+    document.getElementById('notificationStatus').textContent = message;
+  }
+  function notificationsAvailable(){
+    return window.isSecureContext && 'Notification' in window;
+  }
+  function showNotification(title, body){
+    if(notificationsAvailable() && Notification.permission === 'granted'){
+      new Notification(title, { body:body, tag:title });
+    }
+  }
+  function updateNotificationUI(){
+    const btn = document.getElementById('btnNotifications');
+    if(!notificationsAvailable()){
+      btn.disabled = true;
+      setNotificationStatus('Les notifications nécessitent HTTPS ou localhost.');
+      return;
+    }
+    if(Notification.permission === 'granted'){
+      btn.disabled = true;
+      btn.textContent = '✓';
+      setNotificationStatus(t('notificationsEnabled'));
+      return;
+    }
+    if(Notification.permission === 'denied'){
+      btn.disabled = true;
+      setNotificationStatus('Notifications refusées dans les réglages du navigateur.');
+      return;
+    }
+    btn.disabled = false;
+  }
+  function schedulePrayerReminders(){
+    prayerReminderTimers.forEach(timer=>clearTimeout(timer));
+    prayerReminderTimers = [];
+    if(!timings || !notificationsAvailable() || Notification.permission !== 'granted') return;
+    PRAYER_DEFS.filter(prayer=>activePrayerReminders.includes(prayer.key)).forEach(prayer=>{
+      if(!timings[prayer.key]) return;
+      const reminderAt = parseTimeToday(timings[prayer.key]).getTime() - 10 * 60 * 1000;
+      const delay = reminderAt - Date.now();
+      if(delay > 0){
+        prayerReminderTimers.push(setTimeout(()=>{
+          const name = prayer[currentLanguage] || prayer.fr;
+          showNotification('🔔 ' + name + ' dans 10 minutes', 'Préparez-vous pour la prière à ' + timings[prayer.key].split(' ')[0] + '.');
+        }, delay));
+      }
+    });
+  }
+  function isRamadanTomorrow(){
+    try{
+      const tomorrow = new Date(Date.now() + 86400000);
+      const parts = new Intl.DateTimeFormat('en-u-ca-islamic', { month:'numeric', day:'numeric' }).formatToParts(tomorrow);
+      const month = Number(parts.find(part=>part.type === 'month').value);
+      const day = Number(parts.find(part=>part.type === 'day').value);
+      return month === 9 && day === 1;
+    }catch(e){ return false; }
+  }
+  document.getElementById('btnNotifications').addEventListener('click', async ()=>{
+    if(!notificationsAvailable()) return updateNotificationUI();
+    const permission = await Notification.requestPermission();
+    updateNotificationUI();
+    if(permission === 'granted'){
+      schedulePrayerReminders();
+      if(isRamadanTomorrow()) showNotification('🌙 Ramadan commence demain', 'Selon le calendrier de votre appareil, le premier jour de Ramadan est demain.');
+    }
+  });
+  document.getElementById('btnSaveJumuah').addEventListener('click', ()=>{
+    const time = document.getElementById('jumuahTime').value;
+    if(!time) return;
+    try{ localStorage.setItem('jumuahTime', time); }catch(e){}
+    if(notificationsAvailable() && Notification.permission === 'granted'){
+      showNotification('📢 Horaire du Jumu’ah modifié', 'La prière du Jumu’ah est prévue à ' + time + '.');
+    }
+    setNotificationStatus('Horaire du Jumu’ah enregistré : ' + time + '.');
+  });
+  try{
+    const savedJumuahTime = localStorage.getItem('jumuahTime');
+    if(savedJumuahTime) document.getElementById('jumuahTime').value = savedJumuahTime;
+  }catch(e){}
 
   function locationErrorMessage(error){
     if(!error) return "Impossible d'obtenir votre position. Entrez une ville manuellement.";
@@ -850,6 +1019,8 @@
       if(data && data.data && data.data.timings){
         timings = data.data.timings;
         renderPrayerList();
+        renderNotificationPrayerList();
+        schedulePrayerReminders();
         setLocStatus('Horaires mis à jour pour votre position.');
       } else { throw new Error('bad data'); }
     }).catch(()=> setLocStatus("Impossible de récupérer les horaires. Vérifiez votre connexion."));
@@ -861,6 +1032,8 @@
       if(data && data.data && data.data.timings){
         timings = data.data.timings;
         renderPrayerList();
+        renderNotificationPrayerList();
+        schedulePrayerReminders();
         if(data.data.meta && data.data.meta.latitude){
           coords = { lat: data.data.meta.latitude, lng: data.data.meta.longitude };
           afterLocationResolved(coords.lat, coords.lng);
