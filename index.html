@@ -239,6 +239,7 @@
     height:200px; margin-top:14px; position:relative; background:var(--surface);
   }
   .map-frame-wrap iframe{ width:100%; height:100%; border:0; filter: saturate(0.85) brightness(0.9) contrast(1.05); }
+  .map-fallback-link{ display:inline-block; margin-top:8px; color:var(--primary-light); font-size:12px; text-decoration:underline; }
   .mosque-list{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
   .mosque-row{
     display:flex; align-items:center; gap:12px;
@@ -644,9 +645,10 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="9.5" r="2.2" stroke="currentColor" stroke-width="2"/></svg>
       <span id="positionLabelMosques">—</span>
     </div>
-    <div class="map-frame-wrap">
-      <iframe id="mosqueMapFrame" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=mosqu%C3%A9e&z=13&output=embed"></iframe>
+    <div class="map-frame-wrap" id="mosqueMapWrap" hidden>
+      <iframe id="mosqueMapFrame" title="Carte des mosquées à proximité" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
+    <a class="map-fallback-link" id="openMosqueMap" href="#" target="_blank" rel="noopener" hidden>Ouvrir la carte dans Google Maps</a>
     <div class="mosque-list" id="mosqueList">
       <div class="empty-state">Autorisez la localisation dans l'onglet Prières pour voir les mosquées proches de vous.</div>
     </div>
@@ -1308,34 +1310,52 @@
   /* ================= MOSQUEES ================= */
   function updateMosqueMap(lat, lng){
     const iframe = document.getElementById('mosqueMapFrame');
+    const mapWrap = document.getElementById('mosqueMapWrap');
+    const mapLink = document.getElementById('openMosqueMap');
     if(iframe){
       iframe.src = 'https://maps.google.com/maps?q=mosqu%C3%A9e&z=14&ll=' + lat + ',' + lng + '&output=embed';
+      mapWrap.hidden = false;
+      mapLink.href = 'https://www.google.com/maps/search/mosqu%C3%A9e/@' + lat + ',' + lng + ',14z';
+      mapLink.hidden = false;
     }
   }
 
-  function fetchNearbyMosques(lat, lng){
+  async function fetchNearbyMosques(lat, lng){
     const list = document.getElementById('mosqueList');
     list.innerHTML = '<div class="spinner"></div>';
     const query = '[out:json][timeout:15];(' +
       'node["amenity"="place_of_worship"]["religion"="muslim"](around:6000,' + lat + ',' + lng + ');' +
       'way["amenity"="place_of_worship"]["religion"="muslim"](around:6000,' + lat + ',' + lng + ');' +
       ');out center 25;';
-    fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query))
-      .then(r=>r.json())
-      .then(data=>{
-        const items = (data.elements || []).map(el=>{
-          const elat = el.lat !== undefined ? el.lat : (el.center && el.center.lat);
-          const elng = el.lon !== undefined ? el.lon : (el.center && el.center.lon);
-          if(elat == null || elng == null) return null;
-          const name = (el.tags && el.tags.name) || 'Mosquée';
-          return { name: name, lat: elat, lng: elng, dist: haversineKm(lat, lng, elat, elng) };
-        }).filter(Boolean).sort((a,b)=>a.dist-b.dist).slice(0, 15);
-        renderMosqueList(items, lat, lng);
-      })
-      .catch(()=>{
-        list.innerHTML = '<div class="empty-state">Impossible de charger les mosquées à proximité pour le moment. ' +
-          '<a href="https://www.google.com/maps/search/mosqu%C3%A9e/@' + lat + ',' + lng + ',14z" target="_blank" rel="noopener" style="color:var(--gold-light);text-decoration:underline;">Chercher sur Google Maps</a></div>';
-      });
+    const endpoints = [
+      'https://overpass-api.de/api/interpreter?data=',
+      'https://overpass.kumi.systems/api/interpreter?data=',
+      'https://overpass.nchc.org.tw/api/interpreter?data='
+    ];
+    try{
+      let data = null;
+      for(const endpoint of endpoints){
+        try{
+          const response = await fetch(endpoint + encodeURIComponent(query));
+          if(!response.ok) throw new Error('Overpass unavailable');
+          data = await response.json();
+          break;
+        }catch(error){ /* Try the next public Overpass endpoint. */ }
+      }
+      if(!data) throw new Error('All mosque sources unavailable');
+      const items = (data.elements || []).map(el=>{
+        const elat = el.lat !== undefined ? el.lat : (el.center && el.center.lat);
+        const elng = el.lon !== undefined ? el.lon : (el.center && el.center.lon);
+        if(elat == null || elng == null) return null;
+        const name = (el.tags && el.tags.name) || 'Mosquée';
+        return { name: name, lat: elat, lng: elng, dist: haversineKm(lat, lng, elat, elng) };
+      }).filter(Boolean).sort((a,b)=>a.dist-b.dist).slice(0, 15);
+      renderMosqueList(items, lat, lng);
+    }catch(error){
+      list.innerHTML = '<div class="empty-state">Impossible de charger les mosquées à proximité pour le moment.<br><button class="notification-btn" id="retryMosques" type="button" style="margin-top:10px;">Réessayer</button> ' +
+        '<a href="https://www.google.com/maps/search/mosqu%C3%A9e/@' + lat + ',' + lng + ',14z" target="_blank" rel="noopener" style="color:var(--gold-light);text-decoration:underline;">Google Maps</a></div>';
+      document.getElementById('retryMosques').addEventListener('click', ()=> fetchNearbyMosques(lat, lng));
+    }
   }
 
   function renderMosqueList(items){
