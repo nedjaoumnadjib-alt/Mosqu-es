@@ -105,6 +105,11 @@
   .header-actions{ display:flex; flex-direction:column; align-items:flex-end; gap:7px; }
   .header-language-switch{ margin:0; }
   .header-language-switch .quran-language-btn{ min-width:38px; padding:6px 8px; font-size:11px; }
+  .account-btn{ border:1px solid rgba(232,199,102,.3); border-radius:999px; padding:6px 10px; background:rgba(201,162,39,.1); color:var(--gold-light); font:inherit; font-size:11px; font-weight:700; }
+  .account-btn.signed-in{ color:var(--primary-light); border-color:rgba(45,212,191,.32); background:rgba(45,212,191,.09); }
+  .auth-dialog{ width:min(420px, calc(100% - 28px)); border:1px solid var(--border); border-radius:18px; padding:0; color:var(--text); background:var(--bg-alt); box-shadow:0 24px 70px rgba(0,0,0,.45); }
+  .auth-dialog::backdrop{ background:rgba(3,17,14,.7); backdrop-filter:blur(3px); }
+  .auth-card{ padding:20px; }.auth-head{ display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }.auth-title{ font-family:var(--font-head); font-size:25px; color:var(--gold-light); }.auth-copy{ margin:5px 0 16px; color:var(--text-muted); font-size:12px; line-height:1.5; }.auth-close{ border:0; background:transparent; color:var(--text-muted); font-size:22px; }.auth-field{ display:flex; flex-direction:column; gap:6px; margin:10px 0; color:var(--text-muted); font-size:12px; }.auth-field input{ width:100%; padding:11px 12px; border:1px solid var(--border); border-radius:10px; color:var(--text); background:rgba(243,236,217,.06); font:inherit; }.auth-submit,.auth-signout{ width:100%; margin-top:8px; padding:11px; border:0; border-radius:10px; color:#06231E; background:var(--primary-light); font:inherit; font-weight:800; }.auth-signout{ color:var(--text); background:rgba(224,112,90,.16); border:1px solid rgba(224,112,90,.35); }.auth-switch{ margin-top:13px; padding:0; border:0; color:var(--primary-light); background:transparent; font:inherit; font-size:12px; }.auth-status{ min-height:18px; margin-top:10px; color:var(--text-muted); font-size:12px; line-height:1.4; }.auth-status.error{ color:var(--danger); }.auth-user{ padding:12px; border:1px solid rgba(45,212,191,.2); border-radius:12px; background:rgba(45,212,191,.06); font-size:13px; word-break:break-word; }
   .date-pill .hijri{
     color:var(--gold-light);
     font-family:var(--font-arabic-ui);
@@ -320,6 +325,12 @@
   .surah-fr{ font-size:14px; font-weight:600; }
   .surah-meta{ font-size:11px; color:var(--text-muted); margin-top:1px;}
   .surah-ar{ font-family:var(--font-arabic); font-size:19px; color:var(--gold-light); }
+  /* ===== Quran progress ===== */
+  .quran-progress-card{ margin:0 0 15px; padding:15px; border-radius:16px; border:1px solid var(--border); background:linear-gradient(135deg, rgba(28,111,99,.48), rgba(18,57,51,.9)); }
+  .quran-progress-head{ display:flex; justify-content:space-between; align-items:center; gap:12px; }.quran-progress-title{ font-size:14px; font-weight:700; }.quran-progress-percent{ color:var(--gold-light); font-size:19px; font-weight:800; }
+  .quran-progress-track{ height:9px; overflow:hidden; margin:12px 0; border-radius:999px; background:rgba(243,236,217,.13); }.quran-progress-fill{ height:100%; border-radius:inherit; background:linear-gradient(90deg, var(--primary-light), var(--gold-light)); transition:width .3s ease; }
+  .quran-progress-info{ display:flex; justify-content:space-between; gap:10px; color:var(--text-muted); font-size:12px; }.quran-progress-info b{ color:var(--text); }.quran-streak{ margin-top:10px; color:var(--gold-light); font-size:12px; font-weight:700; }.quran-progress-actions{ display:flex; gap:8px; margin-top:12px; }.progress-action{ padding:7px 10px; border:1px solid rgba(45,212,191,.32); border-radius:9px; background:rgba(45,212,191,.1); color:var(--primary-light); font:inherit; font-size:11px; font-weight:700; }
+  .surah-favorite{ flex:0 0 auto; margin-left:8px; padding:6px; border:0; color:var(--text-muted); background:transparent; font-size:19px; line-height:1; }.surah-favorite.active{ color:var(--gold-light); }
 
   .surah-detail-header{
     display:flex; align-items:center; gap:10px; margin-bottom:14px;
@@ -416,6 +427,19 @@
   .dhikr-translit{ margin-top:8px; font-size:12px; font-style:italic; color:#C8DAD5; line-height:1.55; }
   .dhikr-meaning{ margin-top:5px; font-size:12px; color:var(--text-muted); line-height:1.55; }
   .dhikr-count{ display:inline-block; margin-top:9px; padding:3px 8px; border-radius:999px; background:rgba(45,212,191,0.12); color:var(--primary-light); font-size:11px; font-weight:700; }
+  /* ===== Community calendar ===== */
+  .event-filters{ display:flex; gap:7px; overflow-x:auto; padding-bottom:5px; margin:-2px 0 13px; }
+  .event-filter{ flex:0 0 auto; padding:7px 10px; border-radius:999px; border:1px solid var(--border); color:var(--text-muted); background:var(--surface); font:inherit; font-size:11px; }
+  .event-filter.active{ color:#06231E; background:var(--primary-light); border-color:var(--primary-light); font-weight:700; }
+  .event-list{ display:flex; flex-direction:column; gap:10px; }
+  .event-card{ display:flex; gap:12px; padding:13px; border-radius:14px; border:1px solid var(--border); background:var(--surface); }
+  .event-date{ flex:0 0 45px; height:50px; border-radius:10px; background:rgba(201,162,39,.14); color:var(--gold-light); display:flex; flex-direction:column; align-items:center; justify-content:center; line-height:1; }
+  .event-date b{ font-size:19px; }.event-date span{ margin-top:4px; font-size:9px; text-transform:uppercase; }
+  .event-main{ min-width:0; flex:1; }.event-type{ color:var(--primary-light); font-size:10px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }.event-name{ margin-top:4px; font-size:14px; font-weight:700; }.event-meta{ margin-top:4px; color:var(--text-muted); font-size:11px; }
+  .event-actions{ display:flex; gap:7px; margin-top:10px; }.event-action{ padding:6px 8px; border-radius:8px; border:1px solid rgba(45,212,191,.3); background:rgba(45,212,191,.08); color:var(--primary-light); font:inherit; font-size:10.5px; font-weight:700; }.event-action.rsvp{ border-color:rgba(232,199,102,.3); color:var(--gold-light); background:rgba(201,162,39,.09); }
+  .simple-calendar{ padding:14px; border:1px solid var(--border); border-radius:16px; background:var(--surface); }
+  .calendar-month{ text-align:center; font-family:var(--font-head); font-size:22px; color:var(--gold-light); margin-bottom:14px; }
+  .calendar-weekdays,.calendar-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }.calendar-weekdays span{ text-align:center; color:var(--text-muted); font-size:9px; font-weight:700; }.calendar-day{ min-height:39px; padding-top:5px; text-align:center; border-radius:8px; color:var(--text-muted); font-size:11px; }.calendar-day.today{ color:var(--text); background:rgba(45,212,191,.14); border:1px solid rgba(45,212,191,.35); }.calendar-day.event{ color:var(--bg); background:var(--gold-light); font-weight:800; }.calendar-day span{ display:block; margin:2px auto 0; width:5px; height:5px; border-radius:50%; background:currentColor; }.calendar-key{ display:flex; flex-direction:column; gap:8px; margin-top:16px; padding-top:13px; border-top:1px solid var(--border); }.calendar-key-item{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted); }.calendar-key-dot{ width:10px; height:10px; border-radius:50%; background:var(--gold-light); flex:0 0 auto; }
   .spinner{
     width:22px; height:22px; border-radius:50%; border:2px solid var(--border);
     border-top-color:var(--gold); margin:26px auto; animation: sp 0.8s linear infinite;
@@ -474,6 +498,7 @@
           <button class="quran-language-btn active" type="button" data-quran-language="fr">FR</button>
           <button class="quran-language-btn" type="button" data-quran-language="ar">AR</button>
         </div>
+        <button class="account-btn" id="btnAccount" type="button">Se connecter</button>
         <div class="date-pill">
           <div id="gregorianDate">—</div>
           <div class="hijri" id="hijriDate">—</div>
@@ -584,6 +609,13 @@
         <svg class="divider-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/></svg>
       <span data-i18n="quranTitle">Le Saint Coran</span>
       </div>
+      <div class="quran-progress-card">
+        <div class="quran-progress-head"><span class="quran-progress-title">Quran Progress</span><span class="quran-progress-percent" id="quranProgressPercent">72%</span></div>
+        <div class="quran-progress-track"><div class="quran-progress-fill" id="quranProgressFill" style="width:72%"></div></div>
+        <div class="quran-progress-info"><span>Juz: <b id="quranProgressJuz">22</b> / 30</span><span>Surah: <b id="quranProgressSurah">Al-Mu'minun</b></span></div>
+        <div class="quran-streak" id="quranProgressStreak">🔥 12 day streak</div>
+        <div class="quran-progress-actions"><button class="progress-action" id="btnAdvanceQuran" type="button">Mark next Juz</button><button class="progress-action" id="btnResumeQuran" type="button" hidden>Resume reading</button></div>
+      </div>
       <div class="search-box">
         <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/><path d="M21 21l-4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
         <input id="surahSearch" type="text" placeholder="Rechercher une sourate…" data-i18n-placeholder="searchSurah">
@@ -622,6 +654,23 @@
       </div>
       <div id="ayahList"></div>
     </div>
+  </section>
+
+  <!-- ============ MOSQUEES ============ -->
+  <!-- ============ EVENTS ============ -->
+  <section class="view" id="view-events">
+    <div class="section-title">
+      <svg class="divider-star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.5 7H22l-6 4.5L18.5 21 12 16.5 5.5 21 8 13.5 2 9h7.5z"/></svg>
+      <span data-i18n="eventsTitle">Événements & calendrier</span>
+    </div>
+    <div class="simple-calendar">
+      <div class="calendar-month" id="calendarMonth"></div>
+      <div class="calendar-weekdays"><span>Lun</span><span>Mar</span><span>Mer</span><span>Jeu</span><span>Ven</span><span>Sam</span><span>Dim</span></div>
+      <div class="calendar-grid" id="calendarGrid"></div>
+      <div class="calendar-key" id="calendarKey"></div>
+    </div>
+    <div class="event-filters" id="eventFilters"></div>
+    <div class="event-list" id="eventList"></div>
   </section>
 
   <!-- ============ MOSQUEES ============ -->
@@ -671,6 +720,10 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M12 3a8.5 8.5 0 108.5 8.5A6.5 6.5 0 0112 3z" stroke="currentColor" stroke-width="1.6"/><path d="M6 18.5l1.2.2.5 1.1.5-1.1 1.2-.2-.9-.9.2-1.2-1 .6-1-.6.2 1.2z" fill="currentColor"/></svg>
       <span data-i18n="navAdhkar">Adhkār</span>
     </button>
+    <button class="tab-btn" data-view="events">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8 3v4M16 3v4M4 10h16M8 14h3M8 17h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span data-i18n="navEvents">Agenda</span>
+    </button>
     <button class="tab-btn" data-view="mosques">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 21V10l8-6 8 6v11M9 21v-6h6v6M12 4v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span data-i18n="navMosques">Mosquées</span>
@@ -678,15 +731,110 @@
   </nav>
 </div>
 
+<dialog class="auth-dialog" id="authDialog" aria-labelledby="authTitle">
+  <div class="auth-card">
+    <div class="auth-head"><div><div class="auth-title" id="authTitle">Votre compte</div><p class="auth-copy" id="authCopy">Connectez-vous pour synchroniser votre lecture, favoris, événements et réglages.</p></div><button class="auth-close" id="btnCloseAuth" type="button" aria-label="Fermer">×</button></div>
+    <form id="authForm">
+      <label class="auth-field">E-mail<input id="authEmail" type="email" autocomplete="email" required></label>
+      <label class="auth-field">Mot de passe<input id="authPassword" type="password" autocomplete="current-password" minlength="6" required></label>
+      <button class="auth-submit" id="authSubmit" type="submit">Se connecter</button>
+    </form>
+    <div class="auth-user" id="authUser" hidden></div>
+    <button class="auth-signout" id="btnSignOut" type="button" hidden>Se déconnecter</button>
+    <button class="auth-switch" id="btnAuthMode" type="button">Créer un compte</button>
+    <div class="auth-status" id="authStatus" role="status"></div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
   "use strict";
 
+  /* ================= ACCOUNT & CLOUD SYNC =================
+     The publishable key is safe in a browser. Data access is protected by the
+     Row Level Security policy in supabase-schema.sql. */
+  const SUPABASE_URL = 'https://aqshvftzpfaubimqhuvs.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_LM1NaLIwbtcrDHgqctUOvA_SzHu0HJd';
+  const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY) : null;
+  let signedInUser = null;
+  let cloudSyncTimer = null;
+  let cloudChannel = null;
+  let authMode = 'signIn';
+  let favoriteSurahIds = [];
+  try{ favoriteSurahIds = JSON.parse(localStorage.getItem('favoriteSurahIds')) || []; }catch(e){}
+
+  function getSyncData(){
+    return {
+      quranProgress: quranProgress || {},
+      favoriteSurahIds: favoriteSurahIds || [],
+      registeredEventIds: registeredEventIds || [],
+      settings: {
+        language: currentLanguage,
+        prayerReminderKeys: activePrayerReminders || [],
+        jumuahTime: document.getElementById('jumuahTime').value || '13:30'
+      }
+    };
+  }
+  function syncToCloud(){
+    if(!signedInUser || !supabaseClient) return;
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(async ()=>{
+      const { error } = await supabaseClient.from('user_data').upsert({ user_id:signedInUser.id, data:getSyncData(), updated_at:new Date().toISOString() });
+      if(error) console.warn('Cloud sync unavailable:', error.message);
+    }, 350);
+  }
+  function applyCloudData(data){
+    if(!data || typeof data !== 'object') return;
+    if(data.quranProgress && typeof data.quranProgress === 'object') quranProgress = { ...DEFAULT_QURAN_PROGRESS, ...data.quranProgress };
+    if(Array.isArray(data.favoriteSurahIds)) favoriteSurahIds = data.favoriteSurahIds;
+    if(Array.isArray(data.registeredEventIds)) registeredEventIds = data.registeredEventIds;
+    const settings = data.settings || {};
+    if(Array.isArray(settings.prayerReminderKeys)) activePrayerReminders = settings.prayerReminderKeys;
+    if(settings.jumuahTime) document.getElementById('jumuahTime').value = settings.jumuahTime;
+    if(settings.language && UI[settings.language]) applyLanguage(settings.language);
+    try{
+      localStorage.setItem('quranReadingProgress', JSON.stringify(quranProgress));
+      localStorage.setItem('favoriteSurahIds', JSON.stringify(favoriteSurahIds));
+      localStorage.setItem('registeredMosqueEvents', JSON.stringify(registeredEventIds));
+      localStorage.setItem('prayerReminderKeys', JSON.stringify(activePrayerReminders));
+      localStorage.setItem('jumuahTime', document.getElementById('jumuahTime').value);
+    }catch(e){}
+    renderQuranProgress(); renderNotificationPrayerList(); renderEvents();
+    if(surahCache) renderSurahList(surahCache);
+  }
+  function setAuthStatus(message, isError){ const node = document.getElementById('authStatus'); node.textContent = message || ''; node.classList.toggle('error', Boolean(isError)); }
+  function renderAccount(){
+    const accountButton = document.getElementById('btnAccount');
+    const form = document.getElementById('authForm'); const user = document.getElementById('authUser');
+    const submit = document.getElementById('authSubmit'); const switcher = document.getElementById('btnAuthMode'); const signout = document.getElementById('btnSignOut');
+    const loggedIn = Boolean(signedInUser);
+    accountButton.textContent = loggedIn ? '✓ Compte' : 'Se connecter'; accountButton.classList.toggle('signed-in', loggedIn);
+    form.hidden = loggedIn; user.hidden = !loggedIn; signout.hidden = !loggedIn; switcher.hidden = loggedIn;
+    if(loggedIn) user.textContent = 'Connecté(e) : ' + signedInUser.email;
+    else { submit.textContent = authMode === 'signUp' ? 'Créer mon compte' : 'Se connecter'; switcher.textContent = authMode === 'signUp' ? 'J’ai déjà un compte' : 'Créer un compte'; }
+  }
+  async function loadCloudData(){
+    if(!signedInUser || !supabaseClient) return;
+    const { data, error } = await supabaseClient.from('user_data').select('data').eq('user_id', signedInUser.id).maybeSingle();
+    if(error){ setAuthStatus('Connexion établie, mais la table de synchronisation doit être configurée.', true); return; }
+    if(data && data.data) applyCloudData(data.data); else syncToCloud();
+    if(cloudChannel) supabaseClient.removeChannel(cloudChannel);
+    cloudChannel = supabaseClient.channel('user-data-' + signedInUser.id).on('postgres_changes', { event:'UPDATE', schema:'public', table:'user_data', filter:'user_id=eq.' + signedInUser.id }, payload=>applyCloudData(payload.new.data)).subscribe();
+  }
+  async function setSession(session){ signedInUser = session ? session.user : null; renderAccount(); if(signedInUser) await loadCloudData(); }
+  async function initAuth(){
+    renderAccount();
+    if(!supabaseClient){ setAuthStatus('Le client de connexion n’a pas pu être chargé.', true); return; }
+    const { data:{ session } } = await supabaseClient.auth.getSession(); await setSession(session);
+    supabaseClient.auth.onAuthStateChange((_event, session)=>{ setSession(session); });
+  }
+
   /* ---------- Tabs ---------- */
   const tabs = document.querySelectorAll('.tab-btn');
-  const views = { prayer: document.getElementById('view-prayer'), qibla: document.getElementById('view-qibla'), quran: document.getElementById('view-quran'), adhkar: document.getElementById('view-adhkar'), mosques: document.getElementById('view-mosques') };
+  const views = { prayer: document.getElementById('view-prayer'), qibla: document.getElementById('view-qibla'), quran: document.getElementById('view-quran'), adhkar: document.getElementById('view-adhkar'), events: document.getElementById('view-events'), mosques: document.getElementById('view-mosques') };
   const UI = {
-    fr: { brandSub:'Coran · Prières · Qibla · Mosquées', nextPrayer:'Prochaine prière', myPosition:'Ma position', cityPlaceholder:'Ou entrez une ville, un pays', validate:'Valider', prayerTimes:'Horaires du jour', notificationsTitle:'🔔 Notifications', notificationsHint:'Activez les rappels de prière et les annonces importantes.', enableNotifications:'Activer', notificationsEnabled:'Rappels activés : Maghrib, Jumu’ah et Ramadan.', prayerColumn:'Prière', adhanColumn:'Adhan', jumuahTime:"Heure du Jumu'ah", save:'Enregistrer', qiblaTitle:'Direction de la Qibla', enableCompass:'Activer la boussole', compassHint:"Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.", quranTitle:'Le Saint Coran', searchSurah:'Rechercher une sourate…', adhkarTitle:'Adhkār & invocations', adhkarIntro:'Les invocations authentiques du matin, du soir et des moments du quotidien.', nearbyMosques:'Mosquées à proximité', navPrayers:'Prières', navQibla:'Qibla', navQuran:'Coran', navAdhkar:'Adhkār', navMosques:'Mosquées' },
+    fr: { brandSub:'Coran · Prières · Qibla · Mosquées', nextPrayer:'Prochaine prière', myPosition:'Ma position', cityPlaceholder:'Ou entrez une ville, un pays', validate:'Valider', prayerTimes:'Horaires du jour', notificationsTitle:'🔔 Notifications', notificationsHint:'Activez les rappels de prière et les annonces importantes.', enableNotifications:'Activer', notificationsEnabled:'Rappels activés : Maghrib, Jumu’ah et Ramadan.', prayerColumn:'Prière', adhanColumn:'Adhan', jumuahTime:"Heure du Jumu'ah", save:'Enregistrer', qiblaTitle:'Direction de la Qibla', enableCompass:'Activer la boussole', compassHint:"Tenez votre téléphone à plat, écran vers le haut, puis tournez-vous jusqu'à ce que la flèche dorée pointe vers le haut.", quranTitle:'Le Saint Coran', searchSurah:'Rechercher une sourate…', adhkarTitle:'Adhkār & invocations', adhkarIntro:'Les invocations authentiques du matin, du soir et des moments du quotidien.', eventsTitle:'Calendrier', navEvents:'Calendrier', nearbyMosques:'Mosquées à proximité', navPrayers:'Prières', navQibla:'Qibla', navQuran:'Coran', navAdhkar:'Adhkār', navMosques:'Mosquées' },
     en: { brandSub:'Quran · Prayers · Qibla · Mosques', nextPrayer:'Next prayer', myPosition:'My location', cityPlaceholder:'Or enter a city, country', validate:'Confirm', prayerTimes:"Today's prayer times", notificationsTitle:'🔔 Notifications', notificationsHint:'Enable prayer reminders and important announcements.', enableNotifications:'Enable', notificationsEnabled:'Reminders enabled: Maghrib, Jumu’ah and Ramadan.', prayerColumn:'Prayer', adhanColumn:'Adhan', jumuahTime:"Jumu'ah time", save:'Save', qiblaTitle:'Qibla direction', enableCompass:'Enable compass', compassHint:'Hold your phone flat, screen facing up, then turn until the gold arrow points upward.', quranTitle:'The Holy Quran', searchSurah:'Search a surah…', adhkarTitle:'Adhkār & supplications', adhkarIntro:'Authentic supplications for the morning, evening, and daily moments.', nearbyMosques:'Nearby mosques', navPrayers:'Prayers', navQibla:'Qibla', navQuran:'Quran', navAdhkar:'Adhkār', navMosques:'Mosques' },
     ar: { brandSub:'القرآن · الصلاة · القبلة · المساجد', nextPrayer:'الصلاة القادمة', myPosition:'موقعي', cityPlaceholder:'أدخل المدينة والبلد', validate:'تأكيد', prayerTimes:'مواقيت الصلاة اليوم', notificationsTitle:'🔔 الإشعارات', notificationsHint:'فعّل تذكيرات الصلاة والتنبيهات المهمة.', enableNotifications:'تفعيل', notificationsEnabled:'تم تفعيل تذكيرات المغرب والجمعة ورمضان.', prayerColumn:'الصلاة', adhanColumn:'الأذان', jumuahTime:'وقت صلاة الجمعة', save:'حفظ', qiblaTitle:'اتجاه القبلة', enableCompass:'تفعيل البوصلة', compassHint:'أمسك هاتفك بشكل مسطّح والشاشة للأعلى، ثم استدر حتى يشير السهم الذهبي إلى الأعلى.', quranTitle:'القرآن الكريم', searchSurah:'ابحث عن سورة…', adhkarTitle:'الأذكار والأدعية', adhkarIntro:'أذكار الصباح والمساء وأدعية الحياة اليومية.', nearbyMosques:'المساجد القريبة', navPrayers:'الصلاة', navQibla:'القبلة', navQuran:'القرآن', navAdhkar:'الأذكار', navMosques:'المساجد' }
   };
@@ -706,7 +854,9 @@
     if(timings) renderPrayerList();
     renderAdhkar();
     renderNotificationPrayerList();
+    renderEvents();
     updateNotificationUI();
+    syncToCloud();
   }
   tabs.forEach(t=>{
     t.addEventListener('click', ()=>{
@@ -782,6 +932,121 @@
     });
   }
 
+  /* ================= COMMUNITY CALENDAR ================= */
+  function nextWeekday(day, weeksAhead){
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + ((day - date.getDay() + 7) % 7) + (weeksAhead || 0) * 7);
+    return date;
+  }
+  const EVENTS = [
+    { id:'jumuah', category:'Jumu’ah', title:'Prière du Jumu’ah', date:nextWeekday(5), time:'13:30', place:'Salle de prière principale' },
+    { id:'lecture', category:'Conférence', title:'Conférence islamique', date:nextWeekday(6), time:'18:30', place:'Salle communautaire' },
+    { id:'quran', category:'Coran', title:'Cours de Coran', date:nextWeekday(0), time:'10:00', place:'Salle de cours' },
+    { id:'community', category:'Communauté', title:'Réunion communautaire', date:nextWeekday(6, 1), time:'16:00', place:'Salle communautaire' },
+    { id:'ramadan', category:'Ramadan', title:'Programme Ramadan — à confirmer', date:nextWeekday(5, 2), time:'19:00', place:'Mosquée' },
+    { id:'eid', category:'Eid', title:'Prière de l’Eid — à confirmer', date:nextWeekday(5, 3), time:'08:00', place:'Terrain de prière' }
+  ];
+  let eventFilter = 'Tous';
+  let registeredEventIds = [];
+  try{ registeredEventIds = JSON.parse(localStorage.getItem('registeredMosqueEvents')) || []; }catch(e){}
+
+  function downloadCalendarEvent(event){
+    const pad = value=>String(value).padStart(2, '0');
+    const start = new Date(event.date);
+    const [hour, minute] = event.time.split(':').map(Number);
+    start.setHours(hour, minute, 0, 0);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+    const icsDate = date=> date.getFullYear() + pad(date.getMonth()+1) + pad(date.getDate()) + 'T' + pad(date.getHours()) + pad(date.getMinutes()) + '00';
+    const escapeIcs = value=>String(value).replace(/[\\,;]/g, '\\$&').replace(/\n/g, '\\n');
+    const content = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Nadjib//Mosquée//FR\r\nBEGIN:VEVENT\r\nUID:' + event.id + '-' + icsDate(start) + '@nadjib\r\nDTSTAMP:' + icsDate(new Date()) + '\r\nDTSTART:' + icsDate(start) + '\r\nDTEND:' + icsDate(end) + '\r\nSUMMARY:' + escapeIcs(event.title) + '\r\nLOCATION:' + escapeIcs(event.place) + '\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n';
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([content], { type:'text/calendar;charset=utf-8' }));
+    link.download = event.id + '.ics';
+    link.click();
+    setTimeout(()=>URL.revokeObjectURL(link.href), 0);
+  }
+  function renderEventsLegacy(){
+    const filters = document.getElementById('eventFilters');
+    const list = document.getElementById('eventList');
+    if(!filters || !list) return;
+    const categories = ['Tous', ...new Set(EVENTS.map(event=>event.category))];
+    filters.innerHTML = '';
+    categories.forEach(category=>{
+      const button = document.createElement('button');
+      button.type = 'button'; button.className = 'event-filter' + (category === eventFilter ? ' active' : ''); button.textContent = category;
+      button.addEventListener('click', ()=>{ eventFilter = category; renderEvents(); });
+      filters.appendChild(button);
+    });
+    list.innerHTML = '';
+    EVENTS.filter(event=>eventFilter === 'Tous' || event.category === eventFilter).forEach(event=>{
+      const card = document.createElement('article'); card.className = 'event-card';
+      const day = event.date.getDate(); const month = event.date.toLocaleDateString('fr-FR', { month:'short' }).replace('.', '');
+      card.innerHTML = '<div class="event-date"><b>' + day + '</b><span>' + month + '</span></div><div class="event-main"><div class="event-type">' + event.category + '</div><div class="event-name"></div><div class="event-meta"></div><div class="event-actions"></div></div>';
+      card.querySelector('.event-name').textContent = event.title;
+      card.querySelector('.event-meta').textContent = event.time + ' · ' + event.place;
+      const add = document.createElement('button'); add.className = 'event-action'; add.type = 'button'; add.textContent = '＋ Ajouter au calendrier'; add.addEventListener('click', ()=>downloadCalendarEvent(event));
+      const rsvp = document.createElement('button'); rsvp.className = 'event-action rsvp'; rsvp.type = 'button';
+      const registered = registeredEventIds.includes(event.id); rsvp.textContent = registered ? '✓ Inscrit(e)' : 'S’inscrire';
+      rsvp.addEventListener('click', ()=>{
+        registeredEventIds = registered ? registeredEventIds.filter(id=>id !== event.id) : [...registeredEventIds, event.id];
+        try{ localStorage.setItem('registeredMosqueEvents', JSON.stringify(registeredEventIds)); }catch(e){}
+        syncToCloud();
+        renderEvents();
+      });
+      card.querySelector('.event-actions').append(add, rsvp); list.appendChild(card);
+    });
+  }
+
+  function nextIslamicDate(month, day){
+    const probe = new Date();
+    probe.setHours(12, 0, 0, 0);
+    for(let offset = 0; offset < 420; offset++){
+      const parts = new Intl.DateTimeFormat('en-u-ca-islamic', { month:'numeric', day:'numeric' }).formatToParts(probe);
+      const islamicMonth = Number(parts.find(part=>part.type === 'month').value);
+      const islamicDay = Number(parts.find(part=>part.type === 'day').value);
+      if(islamicMonth === month && islamicDay === day) return new Date(probe);
+      probe.setDate(probe.getDate() + 1);
+    }
+    return null;
+  }
+  function renderEvents(){
+    const monthLabel = document.getElementById('calendarMonth');
+    const grid = document.getElementById('calendarGrid');
+    const key = document.getElementById('calendarKey');
+    if(!monthLabel || !grid || !key) return;
+    const today = new Date();
+    const jumuah = nextWeekday(5);
+    const ramadan = nextIslamicDate(9, 1);
+    const eid = nextIslamicDate(10, 1);
+    const importantDates = [
+      { name:'Jumu’ah', date:jumuah },
+      { name:'Début du Ramadan', date:ramadan },
+      { name:'Eid al-Fitr', date:eid }
+    ].filter(event=>event.date);
+    monthLabel.textContent = today.toLocaleDateString('fr-FR', { month:'long', year:'numeric' });
+    grid.innerHTML = '';
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const emptyDays = (firstDay.getDay() + 6) % 7;
+    for(let i=0; i<emptyDays; i++) grid.appendChild(document.createElement('span'));
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth()+1, 0).getDate();
+    for(let day=1; day<=daysInMonth; day++){
+      const cell = document.createElement('div'); cell.className = 'calendar-day'; cell.textContent = day;
+      const cellDate = new Date(today.getFullYear(), today.getMonth(), day);
+      if(day === today.getDate()) cell.classList.add('today');
+      if(importantDates.some(event=>event.date.toDateString() === cellDate.toDateString())){ cell.classList.add('event'); cell.appendChild(document.createElement('span')); }
+      grid.appendChild(cell);
+    }
+    key.innerHTML = '';
+    importantDates.forEach(event=>{
+      const item = document.createElement('div'); item.className = 'calendar-key-item';
+      item.innerHTML = '<i class="calendar-key-dot"></i><span></span>';
+      item.querySelector('span').textContent = event.name + ' · ' + event.date.toLocaleDateString('fr-FR', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+      key.appendChild(item);
+    });
+    renderEventsLegacy();
+  }
+
   /* ---------- Date / greeting ---------- */
   function renderDates(){
     const now = new Date();
@@ -841,6 +1106,7 @@
         if(activePrayerReminders.includes(prayer.key)) activePrayerReminders = activePrayerReminders.filter(key=>key !== prayer.key);
         else activePrayerReminders.push(prayer.key);
         try{ localStorage.setItem('prayerReminderKeys', JSON.stringify(activePrayerReminders)); }catch(e){}
+        syncToCloud();
         renderNotificationPrayerList();
         schedulePrayerReminders();
       });
@@ -926,6 +1192,7 @@
     const time = document.getElementById('jumuahTime').value;
     if(!time) return;
     try{ localStorage.setItem('jumuahTime', time); }catch(e){}
+    syncToCloud();
     if(notificationsAvailable() && Notification.permission === 'granted'){
       showNotification('📢 Horaire du Jumu’ah modifié', 'La prière du Jumu’ah est prévue à ' + time + '.');
     }
@@ -1380,6 +1647,64 @@
   }
 
   /* ================= QURAN ================= */
+  const DEFAULT_QURAN_PROGRESS = { percent:72, juz:22, surah:"Al-Mu'minun", streak:12, lastRead:new Date().toDateString() };
+  let quranProgress = { ...DEFAULT_QURAN_PROGRESS };
+  let ayahObserver = null;
+  try{
+    const savedProgress = JSON.parse(localStorage.getItem('quranReadingProgress'));
+    if(savedProgress && typeof savedProgress === 'object') quranProgress = { ...quranProgress, ...savedProgress };
+  }catch(e){}
+  function saveQuranProgress(){
+    try{ localStorage.setItem('quranReadingProgress', JSON.stringify(quranProgress)); }catch(e){}
+    syncToCloud();
+  }
+  function renderQuranProgress(){
+    const percent = Math.max(0, Math.min(100, Number(quranProgress.percent) || 0));
+    document.getElementById('quranProgressPercent').textContent = percent + '%';
+    document.getElementById('quranProgressFill').style.width = percent + '%';
+    document.getElementById('quranProgressJuz').textContent = quranProgress.juz;
+    document.getElementById('quranProgressSurah').textContent = quranProgress.surah;
+    document.getElementById('quranProgressStreak').textContent = '🔥 ' + quranProgress.streak + ' day streak';
+    const resumeButton = document.getElementById('btnResumeQuran');
+    const lastSurah = quranProgress.lastSurah;
+    if(lastSurah && lastSurah.number){
+      resumeButton.hidden = false;
+      resumeButton.textContent = 'Resume: ' + (lastSurah.englishName || lastSurah.name || 'Surah') + ' · Ayah ' + (quranProgress.lastAyah || 1);
+    } else {
+      resumeButton.hidden = true;
+    }
+  }
+  function updateProgressFromSurah(surah){
+    // The tracker follows the selected surah number: Al-Fātiḥa = 1%,
+    // Al-Baqarah = 2%, and so on (capped at 100% for the 114 surahs).
+    quranProgress.percent = Math.min(100, Number(surah.number) || 0);
+    quranProgress.surah = surah.englishName || surah.name || '—';
+    const isSameSurah = quranProgress.lastSurah && quranProgress.lastSurah.number === surah.number;
+    quranProgress.lastSurah = { number:surah.number, englishName:surah.englishName, name:surah.name };
+    if(!isSameSurah) quranProgress.lastAyah = 1;
+    quranProgress.lastRead = new Date().toDateString();
+    saveQuranProgress();
+    renderQuranProgress();
+  }
+  document.getElementById('btnAdvanceQuran').addEventListener('click', ()=>{
+    const today = new Date().toDateString();
+    if(quranProgress.lastRead !== today){
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      quranProgress.streak = quranProgress.lastRead === yesterday ? Number(quranProgress.streak || 0) + 1 : 1;
+      quranProgress.lastRead = today;
+    }
+    quranProgress.juz = Math.min(30, Number(quranProgress.juz || 0) + 1);
+    quranProgress.percent = Math.round(quranProgress.juz / 30 * 100);
+    saveQuranProgress();
+    renderQuranProgress();
+  });
+  document.getElementById('btnResumeQuran').addEventListener('click', ()=>{
+    const lastSurah = quranProgress.lastSurah;
+    if(!lastSurah) return;
+    openSurah(lastSurah);
+  });
+  renderQuranProgress();
+
   let surahCache = null;
 
   const FALLBACK_SURAHS = [
@@ -1408,8 +1733,15 @@
           '<div class="surah-fr">' + s.englishName + '</div>' +
           '<div class="surah-meta">' + s.englishNameTranslation + ' · ' + s.numberOfAyahs + ' versets</div>' +
         '</div>' +
+        '<button class="surah-favorite' + (favoriteSurahIds.includes(s.number) ? ' active' : '') + '" type="button" aria-label="Ajouter aux favoris" aria-pressed="' + favoriteSurahIds.includes(s.number) + '">★</button>' +
         '<div class="surah-ar">' + s.name + '</div>';
       row.addEventListener('click', ()=> openSurah(s));
+      row.querySelector('.surah-favorite').addEventListener('click', event=>{
+        event.stopPropagation();
+        favoriteSurahIds = favoriteSurahIds.includes(s.number) ? favoriteSurahIds.filter(id=>id !== s.number) : [...favoriteSurahIds, s.number];
+        try{ localStorage.setItem('favoriteSurahIds', JSON.stringify(favoriteSurahIds)); }catch(e){}
+        syncToCloud(); renderSurahList(surahs);
+      });
       wrap.appendChild(row);
     });
   }
@@ -1541,6 +1873,7 @@
   });
 
   function openSurah(s){
+    updateProgressFromSurah(s);
     document.getElementById('quranListWrap').style.display = 'none';
     document.getElementById('quranDetailWrap').style.display = 'block';
     document.getElementById('surahDetailTitle').innerHTML = s.englishName + '<span class="ar">' + s.name + '</span>';
@@ -1577,6 +1910,7 @@
         arabicEdition.forEach((a, i)=>{
           const div = document.createElement('div');
           div.className = 'ayah';
+          div.dataset.ayah = a.numberInSurah;
           const tajweedText = tajweedByVerse.get(s.number + ':' + a.numberInSurah);
           div.innerHTML =
             '<div class="ayah-num">' + a.numberInSurah + '</div>' +
@@ -1585,6 +1919,24 @@
             '<div class="ayah-en"><span class="translation-label">English</span>' + (enEdition[i] ? enEdition[i].text : '') + '</div>';
           ayahList.appendChild(div);
         });
+        if(ayahObserver) ayahObserver.disconnect();
+        if('IntersectionObserver' in window){
+          ayahObserver = new IntersectionObserver(entries=>{
+            entries.forEach(entry=>{
+              if(!entry.isIntersecting || entry.intersectionRatio < 0.55) return;
+              quranProgress.lastAyah = Number(entry.target.dataset.ayah) || 1;
+              quranProgress.lastSurah = { number:s.number, englishName:s.englishName, name:s.name };
+              saveQuranProgress();
+              renderQuranProgress();
+            });
+          }, { threshold:[0.55] });
+          ayahList.querySelectorAll('.ayah').forEach(ayah=>ayahObserver.observe(ayah));
+        }
+        const savedAyah = quranProgress.lastSurah && quranProgress.lastSurah.number === s.number ? quranProgress.lastAyah : 1;
+        const resumeTarget = ayahList.querySelector('[data-ayah="' + (savedAyah || 1) + '"]');
+        if(resumeTarget && savedAyah > 1){
+          setTimeout(()=>resumeTarget.scrollIntoView({ block:'start', behavior:'smooth' }), 120);
+        }
       })
       .catch(()=>{
         ayahList.innerHTML = '<div class="empty-state">Impossible de charger cette sourate pour le moment. Vérifiez votre connexion et réessayez.</div>';
@@ -1606,6 +1958,32 @@
     document.getElementById('quranDetailWrap').style.display = 'none';
     document.getElementById('quranListWrap').style.display = 'block';
   });
+
+  /* ---------- Account controls ---------- */
+  const authDialog = document.getElementById('authDialog');
+  document.getElementById('btnAccount').addEventListener('click', ()=>{ setAuthStatus(''); renderAccount(); authDialog.showModal(); });
+  document.getElementById('btnCloseAuth').addEventListener('click', ()=>authDialog.close());
+  document.getElementById('btnAuthMode').addEventListener('click', ()=>{ authMode = authMode === 'signIn' ? 'signUp' : 'signIn'; setAuthStatus(''); renderAccount(); });
+  document.getElementById('authForm').addEventListener('submit', async event=>{
+    event.preventDefault();
+    if(!supabaseClient) return setAuthStatus('La connexion n’est pas disponible.', true);
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const submit = document.getElementById('authSubmit'); submit.disabled = true;
+    setAuthStatus(authMode === 'signUp' ? 'Création du compte…' : 'Connexion…');
+    const result = authMode === 'signUp'
+      ? await supabaseClient.auth.signUp({ email, password })
+      : await supabaseClient.auth.signInWithPassword({ email, password });
+    submit.disabled = false;
+    if(result.error) return setAuthStatus(result.error.message, true);
+    if(authMode === 'signUp' && !result.data.session) setAuthStatus('Vérifiez votre e-mail pour confirmer votre compte, puis connectez-vous.');
+    else { setAuthStatus('Connexion réussie. Vos données sont synchronisées.'); await setSession(result.data.session); }
+  });
+  document.getElementById('btnSignOut').addEventListener('click', async ()=>{
+    if(supabaseClient) await supabaseClient.auth.signOut();
+    setAuthStatus('Vous êtes déconnecté(e). Les données restent sur cet appareil.');
+  });
+  initAuth();
 
 })();
 </script>
